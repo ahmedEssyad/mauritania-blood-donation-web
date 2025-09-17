@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTranslations } from 'next-intl';
 
-export default function HomePage({ params: { locale } }: { params: { locale: string } }) {
+export default function HomePage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = params.locale as string;
   const { isAuthenticated, loading } = useAuth();
   const t = useTranslations('common');
 

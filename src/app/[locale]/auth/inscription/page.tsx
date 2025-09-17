@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,9 @@ import Link from 'next/link';
 import { BloodType } from '@/types';
 import apiService from '@/lib/api';
 
-export default function RegisterPage({ params: { locale } }: { params: { locale: string } }) {
+export default function RegisterPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [formData, setFormData] = useState({
     phone: '',
     name: '',
@@ -78,7 +80,7 @@ export default function RegisterPage({ params: { locale } }: { params: { locale:
             {t('auth.register.title')}
           </CardTitle>
           <CardDescription className="text-gray-600">
-            Donation de Sang Mauritanie
+            {t('common.appName')}
           </CardDescription>
         </CardHeader>
         <CardContent>

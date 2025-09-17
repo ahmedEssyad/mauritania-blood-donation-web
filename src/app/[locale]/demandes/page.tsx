@@ -2,12 +2,16 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { useParams } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Navbar from '@/components/Navbar';
 import BloodRequestCard from '@/components/blood-requests/BloodRequestCard';
 import FilterBar from '@/components/blood-requests/FilterBar';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ApiErrorBoundary } from '@/components/ErrorBoundary';
+import { BloodRequestListSkeleton } from '@/components/LoadingStates';
+import { useBloodRequests } from '@/hooks/useApi';
+import { debounce } from '@/lib/performance';
 import {
   Plus,
   RefreshCw,
@@ -27,12 +31,10 @@ interface FilterState {
   sortBy: 'newest' | 'closest' | 'urgent';
 }
 
-export default function BloodRequestsPage({ params: { locale } }: { params: { locale: string } }) {
-  const [requests, setRequests] = useState<BloodRequest[]>([]);
+export default function BloodRequestsPage() {
+  const params = useParams();
+  const locale = params.locale as string;
   const [filteredRequests, setFilteredRequests] = useState<BloodRequest[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const [filters, setFilters] = useState<FilterState>({
@@ -45,6 +47,21 @@ export default function BloodRequestsPage({ params: { locale } }: { params: { lo
   });
 
   const t = useTranslations();
+
+  // Build API params
+  const apiParams = {
+    ...(userLocation && {
+      lat: userLocation.lat,
+      lng: userLocation.lng,
+      radius: filters.maxDistance
+    }),
+    ...(filters.bloodType !== 'all' && { bloodType: filters.bloodType }),
+    ...(filters.urgency !== 'all' && { urgency: filters.urgency }),
+    ...(filters.status !== 'all' && { status: filters.status })
+  };
+
+  // Use optimized API hook
+  const { data: requestsData, loading, error, execute: refreshRequests } = useBloodRequests(apiParams);
 
   // Get user location
   useEffect(() => {
@@ -63,50 +80,10 @@ export default function BloodRequestsPage({ params: { locale } }: { params: { lo
     }
   }, []);
 
-  // Load blood requests
-  const loadRequests = useCallback(async (refresh = false) => {
-    try {
-      if (refresh) setRefreshing(true);
-      else setLoading(true);
+  const requests = requestsData?.requests || [];
 
-      const params: any = {};
-
-      // Add location if available
-      if (userLocation) {
-        params.lat = userLocation.lat;
-        params.lng = userLocation.lng;
-        params.radius = filters.maxDistance;
-      }
-
-      // Add filters
-      if (filters.bloodType !== 'all') params.bloodType = filters.bloodType;
-      if (filters.urgency !== 'all') params.urgency = filters.urgency;
-      if (filters.status !== 'all') params.status = filters.status;
-
-      const response = await apiService.getBloodRequests(params);
-
-      if (response.success) {
-        let requestsData = response.data.requests || [];
-
-        // Apply sorting
-        requestsData = sortRequests(requestsData, filters.sortBy);
-
-        setRequests(requestsData);
-        setError(null);
-      } else {
-        setError(response.message || 'Failed to load requests');
-      }
-    } catch (err: any) {
-      setError(err.message || 'Network error');
-      console.error('Failed to load requests:', err);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [userLocation, filters.maxDistance, filters.bloodType, filters.urgency, filters.status, filters.sortBy]);
-
-  // Sort requests
-  const sortRequests = (requests: BloodRequest[], sortBy: string) => {
+  // Sort requests function
+  const sortRequests = useCallback((requests: BloodRequest[], sortBy: string) => {
     return [...requests].sort((a, b) => {
       switch (sortBy) {
         case 'closest':
@@ -119,30 +96,38 @@ export default function BloodRequestsPage({ params: { locale } }: { params: { lo
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       }
     });
-  };
+  }, []);
 
-  // Filter requests
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce((searchTerm: string, allRequests: BloodRequest[]) => {
+      let filtered = [...allRequests];
+
+      if (searchTerm) {
+        const searchLower = searchTerm.toLowerCase();
+        filtered = filtered.filter(request =>
+          request.description?.toLowerCase().includes(searchLower) ||
+          request.medicalInfo?.hospitalName?.toLowerCase().includes(searchLower) ||
+          request.location.address?.toLowerCase().includes(searchLower) ||
+          request.bloodType.toLowerCase().includes(searchLower)
+        );
+      }
+
+      // Apply sorting
+      filtered = sortRequests(filtered, filters.sortBy);
+      setFilteredRequests(filtered);
+    }, 300),
+    [sortRequests, filters.sortBy]
+  );
+
+  // Filter and sort requests
   useEffect(() => {
-    let filtered = [...requests];
-
-    // Apply search filter
-    if (filters.search) {
-      const searchLower = filters.search.toLowerCase();
-      filtered = filtered.filter(request =>
-        request.description?.toLowerCase().includes(searchLower) ||
-        request.medicalInfo?.hospitalName?.toLowerCase().includes(searchLower) ||
-        request.location.address?.toLowerCase().includes(searchLower) ||
-        request.bloodType.toLowerCase().includes(searchLower)
-      );
+    if (requests.length > 0) {
+      debouncedSearch(filters.search, requests);
+    } else {
+      setFilteredRequests([]);
     }
-
-    setFilteredRequests(filtered);
-  }, [requests, filters.search]);
-
-  // Load data on mount and filter changes
-  useEffect(() => {
-    loadRequests();
-  }, [loadRequests]);
+  }, [requests, filters.search, debouncedSearch]);
 
   const handleFiltersChange = (newFilters: FilterState) => {
     setFilters(newFilters);
@@ -157,32 +142,12 @@ export default function BloodRequestsPage({ params: { locale } }: { params: { lo
       const response = await apiService.respondToRequest(requestId);
       if (response.success) {
         // Refresh the list to update response count
-        loadRequests(true);
+        refreshRequests();
       }
     } catch (error) {
       console.error('Failed to respond to request:', error);
     }
   };
-
-  const LoadingSkeleton = () => (
-    <div className="space-y-4">
-      {[...Array(5)].map((_, i) => (
-        <div key={i} className="p-6 border rounded-lg">
-          <div className="flex items-start space-x-4">
-            <Skeleton className="h-12 w-12 rounded-full" />
-            <div className="flex-1 space-y-2">
-              <div className="flex space-x-2">
-                <Skeleton className="h-6 w-16" />
-                <Skeleton className="h-6 w-20" />
-              </div>
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
 
   return (
     <ProtectedRoute locale={locale}>
@@ -204,12 +169,12 @@ export default function BloodRequestsPage({ params: { locale } }: { params: { lo
             <div className="mt-4 sm:mt-0 flex space-x-3">
               <Button
                 variant="outline"
-                onClick={() => loadRequests(true)}
-                disabled={refreshing}
+                onClick={refreshRequests}
+                disabled={loading}
                 size="sm"
               >
-                <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                {refreshing ? t('common.loading') : t('common.refresh')}
+                <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                {loading ? t('common.loading') : t('common.refresh')}
               </Button>
 
               <Link href={`/${locale}/demandes/creer`}>
@@ -232,21 +197,22 @@ export default function BloodRequestsPage({ params: { locale } }: { params: { lo
           </div>
 
           {/* Content */}
-          {error ? (
-            <div className="text-center py-12">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Erreur de chargement
-              </h3>
-              <p className="text-gray-600 mb-4">{error}</p>
-              <Button onClick={() => loadRequests()} variant="outline">
-                <RefreshCw className="h-4 w-4 mr-2" />
-                {t('common.retry')}
-              </Button>
-            </div>
-          ) : loading ? (
-            <LoadingSkeleton />
-          ) : filteredRequests.length > 0 ? (
+          <ApiErrorBoundary>
+            {error ? (
+              <div className="text-center py-12">
+                <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  {t('errors.title')}
+                </h3>
+                <p className="text-gray-600 mb-4">{error.message}</p>
+                <Button onClick={refreshRequests} variant="outline">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  {t('common.retry')}
+                </Button>
+              </div>
+            ) : loading ? (
+              <BloodRequestListSkeleton />
+            ) : filteredRequests.length > 0 ? (
             <div className="space-y-6">
               {filteredRequests.map((request) => (
                 <BloodRequestCard
@@ -303,6 +269,7 @@ export default function BloodRequestsPage({ params: { locale } }: { params: { lo
               </div>
             </div>
           )}
+          </ApiErrorBoundary>
         </main>
       </div>
     </ProtectedRoute>

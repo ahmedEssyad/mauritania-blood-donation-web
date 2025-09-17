@@ -105,11 +105,28 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
     setError(null);
 
     try {
+      // Get current location for coordinates
+      let coordinates = undefined;
+      if (navigator.geolocation) {
+        try {
+          const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          });
+          coordinates = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
+        } catch (err) {
+          console.warn('Could not get location:', err);
+        }
+      }
+
       const updateData = {
         name: data.name,
         bloodType: data.bloodType,
         lastDonationDate: data.lastDonationDate || null,
         profileCompleted: true,
+        ...(coordinates && { coordinates })
       };
 
       const response = await apiService.updateProfile(updateData);

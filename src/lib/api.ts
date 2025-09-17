@@ -1,12 +1,25 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 import { ApiResponse } from '@/types';
+
+interface RetryConfig {
+  retries: number;
+  retryDelay: number;
+  retryCondition?: (error: AxiosError) => boolean;
+}
 
 class ApiService {
   private client: AxiosInstance;
   private baseURL: string;
+  private retryConfig: RetryConfig = {
+    retries: 3,
+    retryDelay: 1000,
+    retryCondition: (error: AxiosError) => {
+      return !error.response || error.response.status >= 500;
+    }
+  };
 
   constructor() {
-    this.baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://mauritania-blood-donation-api.onrender.com/api/v1';
+    this.baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://mauritania-blood-donation-api.onrender.com/api';
 
     this.client = axios.create({
       baseURL: this.baseURL,
@@ -17,6 +30,27 @@ class ApiService {
     });
 
     this.setupInterceptors();
+  }
+
+  private async retryRequest(
+    requestConfig: any,
+    retryConfig: RetryConfig = this.retryConfig
+  ): Promise<any> {
+    const { retries, retryDelay, retryCondition } = retryConfig;
+
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        return await this.client(requestConfig);
+      } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (attempt === retries || !retryCondition?.(axiosError)) {
+          throw error;
+        }
+
+        await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempt)));
+      }
+    }
   }
 
   private setupInterceptors() {
@@ -189,7 +223,7 @@ class ApiService {
   }
 
   async getDonationHistory(params: any = {}): Promise<ApiResponse> {
-    const response = await this.client.get('/user/donation-history', { params });
+    const response = await this.client.get('/donations/history', { params });
     return response.data;
   }
 

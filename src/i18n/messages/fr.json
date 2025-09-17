@@ -17,7 +17,13 @@
     "clear": "Effacer",
     "submit": "Soumettre",
     "retry": "Réessayer",
-    "refresh": "Actualiser"
+    "refresh": "Actualiser",
+    "appName": "Donation de Sang Mauritanie",
+    "appNameShort": "DonSang MR",
+    "phone": "Numéro de téléphone",
+    "continue": "Continuer",
+    "creating": "Création en cours...",
+    "description": "Description"
   },
   "navigation": {
     "dashboard": "Tableau de bord",
@@ -56,6 +62,39 @@
       "submit": "Vérifier",
       "resend": "Renvoyer le code",
       "timer": "Renvoyer dans {seconds}s"
+    },
+    "forgotPassword": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entrez votre numéro de téléphone pour recevoir un code de réinitialisation",
+      "phone": "Numéro de téléphone",
+      "sendCode": "Envoyer le code",
+      "sending": "Envoi en cours...",
+      "codeSent": "Code envoyé !",
+      "codeSentMessage": "Un code de réinitialisation a été envoyé à votre numéro de téléphone.",
+      "redirecting": "Redirection vers la page de réinitialisation...",
+      "continue": "Continuer vers la réinitialisation",
+      "backToLogin": "Retour à la connexion"
+    },
+    "resetPassword": {
+      "title": "Réinitialiser le mot de passe",
+      "subtitle": "Entrez le code reçu par SMS et votre nouveau mot de passe",
+      "verificationCode": "Code de vérification",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "passwordPlaceholder": "Au moins 6 caractères avec majuscule, minuscule et chiffre",
+      "submit": "Réinitialiser le mot de passe",
+      "submitting": "Réinitialisation en cours...",
+      "success": "Mot de passe réinitialisé !",
+      "successMessage": "Votre mot de passe a été réinitialisé avec succès.",
+      "redirectingToLogin": "Redirection vers la page de connexion...",
+      "goToLogin": "Se connecter",
+      "resendCode": "Renvoyer le code",
+      "resendTimer": "Renvoyer le code dans {seconds}s",
+      "backToLogin": "Retour à la connexion",
+      "enterCode": "Veuillez entrer le code à 6 chiffres",
+      "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+      "passwordRequirements": "Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre"
     }
   },
   "dashboard": {
@@ -82,6 +121,10 @@
     "title": "Demandes de sang",
     "create": {
       "title": "Créer une demande",
+      "subtitle": "Créez une demande de sang pour recevoir de l'aide de donneurs volontaires",
+      "backToRequests": "Retour aux demandes",
+      "formTitle": "Informations de la demande",
+      "formDescription": "Remplissez toutes les informations nécessaires pour votre demande de sang",
       "bloodType": "Groupe sanguin requis",
       "urgency": "Niveau d'urgence",
       "description": "Description",
@@ -189,6 +232,9 @@
     "O-": "O-"
   },
   "errors": {
+    "title": "Une erreur s'est produite",
+    "description": "Quelque chose s'est mal passé. Veuillez réessayer.",
+    "retry": "Réessayer",
     "required": "Ce champ est requis",
     "invalidPhone": "Numéro de téléphone invalide",
     "invalidEmail": "Email invalide",
@@ -199,6 +245,19 @@
     "unauthorized": "Non autorisé",
     "forbidden": "Accès interdit",
     "notFound": "Non trouvé",
-    "validationError": "Erreur de validation"
+    "validationError": "Erreur de validation",
+    "api": {
+      "title": "Erreur de connexion",
+      "description": "Impossible de charger les données. Vérifiez votre connexion."
+    },
+    "location": {
+      "denied": "Accès à la localisation refusé",
+      "unavailable": "Localisation indisponible",
+      "timeout": "Délai d'attente de la localisation dépassé"
+    },
+    "notification": {
+      "denied": "Notifications refusées",
+      "unsupported": "Notifications non supportées"
+    }
   }
 }

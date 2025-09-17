@@ -87,18 +87,23 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
     setError(null);
 
     try {
+      // Map frontend urgency levels to API urgency levels
+      const urgencyMapping = {
+        'low': 'LOW',
+        'medium': 'MEDIUM',
+        'high': 'HIGH',
+        'urgent': 'CRITICAL'
+      };
+
       const requestData = {
         bloodType: data.bloodType,
-        urgencyLevel: data.urgencyLevel,
+        urgency: urgencyMapping[data.urgencyLevel as keyof typeof urgencyMapping],
         description: data.description,
         contactPhone: data.contactPhone,
-        coordinates: [location.lng, location.lat], // MongoDB expects [longitude, latitude]
-        medicalInfo: {
-          hospitalName: data.hospitalName,
-          condition: data.condition || undefined,
-          doctorName: data.doctorName || undefined,
-          urgentNeed: data.urgencyLevel === 'urgent',
-        },
+        coordinates: {
+          latitude: location.lat,
+          longitude: location.lng
+        }
       };
 
       const response = await apiService.createBloodRequest(requestData);
@@ -168,7 +173,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
               className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
-              Retour aux demandes
+              {t('bloodRequests.create.backToRequests')}
             </Link>
 
             <div className="flex items-center space-x-3">
@@ -180,7 +185,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                   {t('bloodRequests.create.title')}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Créez une demande de sang pour recevoir de l'aide de donneurs volontaires
+                  {t('bloodRequests.create.subtitle')}
                 </p>
               </div>
             </div>
@@ -191,9 +196,9 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
             <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Informations de la demande</CardTitle>
+                  <CardTitle>{t('bloodRequests.create.formTitle')}</CardTitle>
                   <CardDescription>
-                    Remplissez toutes les informations nécessaires pour votre demande de sang
+                    {t('bloodRequests.create.formDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -357,7 +362,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                       <div className="flex justify-end space-x-4">
                         <Link href={`/${locale}/demandes`}>
                           <Button type="button" variant="outline">
-                            Annuler
+                            {t('common.cancel')}
                           </Button>
                         </Link>
                         <Button
@@ -368,7 +373,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                           {isSubmitting ? (
                             <>
                               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                              Création en cours...
+                              {t('common.creating')}
                             </>
                           ) : (
                             t('bloodRequests.create.submit')
