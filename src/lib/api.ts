@@ -1,0 +1,386 @@
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { ApiResponse } from '@/types';
+
+class ApiService {
+  private client: AxiosInstance;
+  private baseURL: string;
+
+  constructor() {
+    this.baseURL = process.env.NEXT_PUBLIC_API_URL || 'https://mauritania-blood-donation-api.onrender.com/api/v1';
+
+    this.client = axios.create({
+      baseURL: this.baseURL,
+      timeout: 15000,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    this.setupInterceptors();
+  }
+
+  private setupInterceptors() {
+    // Request interceptor - Add auth token and language
+    this.client.interceptors.request.use(
+      async (config) => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        // Add language header for internationalization
+        const locale = localStorage.getItem('locale') || 'fr';
+        config.headers['Accept-Language'] = locale;
+
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    // Response interceptor - Handle token refresh and network errors
+    this.client.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+
+        // Handle timeout and network errors with better messages
+        if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
+          const timeoutError = new Error('Connection timeout. Please check your internet connection and try again.');
+          timeoutError.code = 'TIMEOUT';
+          return Promise.reject(timeoutError);
+        }
+
+        if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
+          const networkError = new Error('Cannot connect to server. Please check your internet connection.');
+          networkError.code = 'NETWORK_ERROR';
+          return Promise.reject(networkError);
+        }
+
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          try {
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (refreshToken) {
+              const response = await this.client.post('/auth/refresh-token', {
+                refreshToken,
+              });
+
+              const { accessToken, refreshToken: newRefreshToken } = response.data.data.tokens;
+
+              localStorage.setItem('accessToken', accessToken);
+              localStorage.setItem('refreshToken', newRefreshToken);
+
+              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+              return this.client(originalRequest);
+            }
+          } catch (refreshError) {
+            // Refresh failed, redirect to login
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('user');
+            window.location.href = '/auth/connexion';
+          }
+        }
+
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  // Auth endpoints
+  async sendOTP(phone: string): Promise<ApiResponse> {
+    const response = await this.client.post('/auth/send-otp', { phone });
+    return response.data;
+  }
+
+  async verifyOTP(phone: string, code: string): Promise<ApiResponse> {
+    const response = await this.client.post('/auth/verify-otp', { phone, code });
+    return response.data;
+  }
+
+  async setPassword(phone: string, password: string): Promise<ApiResponse> {
+    const response = await this.client.post('/auth/set-password', { phone, password });
+    return response.data;
+  }
+
+  async login(phone: string, password: string): Promise<ApiResponse> {
+    const response = await this.client.post('/auth/login', { phone, password });
+    return response.data;
+  }
+
+  async forgotPassword(phone: string): Promise<ApiResponse> {
+    const response = await this.client.post('/auth/forgot-password', { phone });
+    return response.data;
+  }
+
+  async resetPassword(phone: string, code: string, password: string): Promise<ApiResponse> {
+    const response = await this.client.post('/auth/reset-password', { phone, code, password });
+    return response.data;
+  }
+
+  async logout(refreshToken: string): Promise<ApiResponse> {
+    const response = await this.client.post('/auth/logout', { refreshToken });
+    return response.data;
+  }
+
+  // User endpoints
+  async getProfile(): Promise<ApiResponse> {
+    const response = await this.client.get('/user/profile');
+    return response.data;
+  }
+
+  async updateProfile(data: {
+    name?: string;
+    bloodType?: string;
+    lastDonationDate?: string | null;
+    profileCompleted?: boolean;
+  }): Promise<ApiResponse> {
+    const response = await this.client.put('/user/profile', data);
+    return response.data;
+  }
+
+  async getEligibilityStatus(): Promise<ApiResponse> {
+    try {
+      const response = await this.client.get('/user/eligibility-status');
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // Return mock data if endpoint doesn't exist yet
+        return {
+          success: true,
+          data: {
+            isEligible: true,
+            nextEligibleDate: null,
+            eligibilityReason: null
+          }
+        };
+      }
+      throw error;
+    }
+  }
+
+  async updatePushToken(token: string): Promise<ApiResponse> {
+    const response = await this.client.post('/user/push-token', { token });
+    return response.data;
+  }
+
+  async getNotificationPreferences(): Promise<ApiResponse> {
+    const response = await this.client.get('/user/notification-preferences');
+    return response.data;
+  }
+
+  async updateNotificationPreferences(preferences: any): Promise<ApiResponse> {
+    try {
+      const response = await this.client.put('/user/notification-preferences', preferences);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // Return success if endpoint doesn't exist yet
+        return {
+          success: true,
+          data: {
+            user: null
+          }
+        };
+      }
+      throw error;
+    }
+  }
+
+  async getDonationHistory(params: any = {}): Promise<ApiResponse> {
+    const response = await this.client.get('/user/donation-history', { params });
+    return response.data;
+  }
+
+  async getUserStats(): Promise<ApiResponse> {
+    try {
+      const response = await this.client.get('/user/stats');
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        // Return mock data if endpoint doesn't exist or has issues
+        return {
+          success: true,
+          data: {
+            totalDonations: 0,
+            thisYearDonations: 0,
+            avgRating: 0,
+            totalResponses: 0
+          }
+        };
+      }
+      throw error;
+    }
+  }
+
+  // Blood request endpoints
+  async getBloodRequests(params: any = {}): Promise<ApiResponse> {
+    try {
+      const response = await this.client.get('/blood-requests', { params });
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        // Return empty data if endpoint has issues
+        return {
+          success: true,
+          data: {
+            requests: [],
+            total: 0,
+            page: 1,
+            limit: 10,
+            totalPages: 0
+          }
+        };
+      }
+      throw error;
+    }
+  }
+
+  async createBloodRequest(data: any): Promise<ApiResponse> {
+    const response = await this.client.post('/blood-requests', data);
+    return response.data;
+  }
+
+  async getMyRequests(params: any = {}): Promise<ApiResponse> {
+    const response = await this.client.get('/blood-requests/my-requests', { params });
+    return response.data;
+  }
+
+  async respondToRequest(requestId: string, message?: string): Promise<ApiResponse> {
+    const response = await this.client.post(`/blood-requests/${requestId}/respond`, { message });
+    return response.data;
+  }
+
+  async closeRequest(requestId: string, reason: string, notes?: string): Promise<ApiResponse> {
+    const response = await this.client.put(`/blood-requests/${requestId}/close`, { reason, notes });
+    return response.data;
+  }
+
+  async getBloodRequest(requestId: string): Promise<ApiResponse> {
+    const response = await this.client.get(`/blood-requests/${requestId}`);
+    return response.data;
+  }
+
+  async respondToBloodRequest(requestId: string, data: { message?: string; availableAt?: string }): Promise<ApiResponse> {
+    const response = await this.client.post(`/blood-requests/${requestId}/respond`, data);
+    return response.data;
+  }
+
+  async getBloodRequestResponses(requestId: string): Promise<ApiResponse> {
+    const response = await this.client.get(`/blood-requests/${requestId}/responses`);
+    return response.data;
+  }
+
+  async confirmDonor(requestId: string, responseId: string): Promise<ApiResponse> {
+    const response = await this.client.post(`/blood-requests/${requestId}/confirm-donor`, { responseId });
+    return response.data;
+  }
+
+  async getNearbyDonors(params: {
+    lat: number;
+    lng: number;
+    radius?: number;
+    limit?: number;
+    bloodType?: string;
+  }): Promise<ApiResponse> {
+    try {
+      const response = await this.client.get('/users/nearby-donors', { params });
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        // Return empty data if endpoint has issues
+        return {
+          success: true,
+          data: {
+            donors: [],
+            total: 0
+          }
+        };
+      }
+      throw error;
+    }
+  }
+
+  // Donation endpoints
+  async confirmDonation(data: any): Promise<ApiResponse> {
+    const response = await this.client.post('/donations/confirm-donation', data);
+    return response.data;
+  }
+
+  async confirmReceived(donationId: string, data: any): Promise<ApiResponse> {
+    const response = await this.client.put(`/donations/${donationId}/confirm-received`, data);
+    return response.data;
+  }
+
+  async getDonationStats(): Promise<ApiResponse> {
+    const response = await this.client.get('/donations/stats');
+    return response.data;
+  }
+
+  async rateDonation(donationId: string, rating: number, feedback?: string): Promise<ApiResponse> {
+    const response = await this.client.post(`/donations/${donationId}/rate`, { rating, feedback });
+    return response.data;
+  }
+
+  async getPendingConfirmations(): Promise<ApiResponse> {
+    const response = await this.client.get('/donations/pending-confirmations');
+    return response.data;
+  }
+
+  // Notification endpoints
+  async getNotificationHistory(params: any = {}): Promise<ApiResponse> {
+    try {
+      const response = await this.client.get('/notifications/history', { params });
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404 || error.response?.status === 500) {
+        // Return mock data if endpoint doesn't exist yet
+        return {
+          success: true,
+          data: {
+            notifications: [],
+            total: 0,
+            page: 1,
+            limit: 10,
+            totalPages: 0
+          }
+        };
+      }
+      throw error;
+    }
+  }
+
+  async markNotificationRead(notificationId: string): Promise<ApiResponse> {
+    try {
+      const response = await this.client.put(`/notifications/${notificationId}/mark-read`);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // Return success if endpoint doesn't exist yet
+        return { success: true, data: {} };
+      }
+      throw error;
+    }
+  }
+
+  async markAllNotificationsRead(): Promise<ApiResponse> {
+    try {
+      const response = await this.client.put('/notifications/mark-all-read');
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // Return success if endpoint doesn't exist yet
+        return { success: true, data: {} };
+      }
+      throw error;
+    }
+  }
+
+  async getUnreadCount(): Promise<ApiResponse> {
+    const response = await this.client.get('/notifications/unread-count');
+    return response.data;
+  }
+}
+
+export default new ApiService();

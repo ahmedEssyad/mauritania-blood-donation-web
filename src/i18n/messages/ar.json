@@ -1,0 +1,204 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "save": "حفظ",
+    "edit": "تحرير",
+    "delete": "حذف",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "close": "إغلاق",
+    "search": "بحث",
+    "filter": "تصفية",
+    "clear": "مسح",
+    "submit": "إرسال",
+    "retry": "إعادة المحاولة",
+    "refresh": "تحديث"
+  },
+  "navigation": {
+    "dashboard": "لوحة المعلومات",
+    "requests": "الطلبات",
+    "profile": "الملف الشخصي",
+    "history": "التاريخ",
+    "settings": "الإعدادات",
+    "notifications": "الإشعارات",
+    "logout": "تسجيل الخروج"
+  },
+  "auth": {
+    "login": {
+      "title": "تسجيل الدخول",
+      "phone": "رقم الهاتف",
+      "password": "كلمة المرور",
+      "submit": "دخول",
+      "forgotPassword": "نسيت كلمة المرور؟",
+      "noAccount": "ليس لديك حساب؟",
+      "register": "إنشاء حساب"
+    },
+    "register": {
+      "title": "إنشاء حساب",
+      "phone": "رقم الهاتف",
+      "name": "الاسم الكامل",
+      "bloodType": "فصيلة الدم",
+      "password": "كلمة المرور",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "submit": "إنشاء حساب",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول"
+    },
+    "otp": {
+      "title": "التحقق",
+      "subtitle": "أدخل الرمز المرسل إلى هاتفك",
+      "code": "رمز التحقق",
+      "submit": "تحقق",
+      "resend": "إعادة إرسال الرمز",
+      "timer": "إعادة الإرسال خلال {seconds} ثانية"
+    }
+  },
+  "dashboard": {
+    "title": "لوحة المعلومات",
+    "quickActions": {
+      "title": "إجراءات سريعة",
+      "createRequest": "إنشاء طلب",
+      "findDonors": "العثور على متبرعين",
+      "viewHistory": "عرض التاريخ"
+    },
+    "stats": {
+      "totalDonations": "إجمالي التبرعات",
+      "thisYear": "هذا العام",
+      "rating": "التقييم المتوسط",
+      "responses": "الردود"
+    },
+    "recentRequests": {
+      "title": "الطلبات الأخيرة",
+      "empty": "لا توجد طلبات حديثة",
+      "viewAll": "عرض الكل"
+    }
+  },
+  "bloodRequests": {
+    "title": "طلبات الدم",
+    "create": {
+      "title": "إنشاء طلب",
+      "bloodType": "فصيلة الدم المطلوبة",
+      "urgency": "مستوى الإلحاح",
+      "description": "الوصف",
+      "location": "الموقع",
+      "hospital": "المستشفى",
+      "contactPhone": "هاتف الاتصال",
+      "condition": "الحالة الطبية",
+      "submit": "إنشاء الطلب"
+    },
+    "filters": {
+      "all": "الكل",
+      "active": "نشطة",
+      "emergency": "طوارئ",
+      "nearby": "قريبة"
+    },
+    "urgency": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "urgent": "عاجل"
+    },
+    "status": {
+      "active": "نشط",
+      "fulfilled": "مكتمل",
+      "cancelled": "ملغي",
+      "expired": "منتهي الصلاحية"
+    },
+    "details": {
+      "title": "تفاصيل الطلب",
+      "respond": "رد",
+      "close": "إغلاق",
+      "responses": "الردود ({count})",
+      "distance": "{distance} كم",
+      "createdAt": "تم الإنشاء في",
+      "expiresAt": "ينتهي في"
+    }
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "personal": {
+      "title": "المعلومات الشخصية",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "bloodType": "فصيلة الدم",
+      "lastDonation": "آخر تبرع",
+      "eligibility": "الأهلية",
+      "eligible": "مؤهل",
+      "notEligible": "غير مؤهل",
+      "nextEligible": "التأهيل القادم"
+    },
+    "stats": {
+      "title": "الإحصائيات",
+      "totalDonations": "إجمالي التبرعات",
+      "thisYear": "هذا العام",
+      "rating": "التقييم المتوسط",
+      "achievements": "الإنجازات"
+    },
+    "edit": {
+      "title": "تحرير الملف الشخصي",
+      "save": "حفظ التغييرات"
+    }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "empty": "لا توجد إشعارات",
+    "types": {
+      "blood_request_created": "طلب دم جديد",
+      "blood_request_response": "رد على طلبك",
+      "donor_selected": "تم اختيار المتبرع",
+      "donation_confirmed": "تم تأكيد التبرع",
+      "donation_received": "تم استلام التبرع",
+      "eligibility_reminder": "تذكير بالأهلية"
+    }
+  },
+  "settings": {
+    "title": "الإعدادات",
+    "language": {
+      "title": "اللغة",
+      "french": "Français",
+      "arabic": "العربية"
+    },
+    "notifications": {
+      "title": "الإشعارات",
+      "bloodRequests": "طلبات الدم",
+      "eligibilityReminders": "تذكيرات الأهلية",
+      "donationConfirmations": "تأكيدات التبرع",
+      "sound": "الصوت",
+      "vibration": "الاهتزاز",
+      "maxDistance": "المسافة القصوى (كم)"
+    },
+    "privacy": {
+      "title": "الخصوصية",
+      "deleteAccount": "حذف الحساب"
+    }
+  },
+  "bloodTypes": {
+    "A+": "A+",
+    "A-": "A-",
+    "B+": "B+",
+    "B-": "B-",
+    "AB+": "AB+",
+    "AB-": "AB-",
+    "O+": "O+",
+    "O-": "O-"
+  },
+  "errors": {
+    "required": "هذا الحقل مطلوب",
+    "invalidPhone": "رقم هاتف غير صحيح",
+    "invalidEmail": "بريد إلكتروني غير صحيح",
+    "passwordTooShort": "كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "networkError": "خطأ في الشبكة",
+    "serverError": "خطأ في الخادم",
+    "unauthorized": "غير مخول",
+    "forbidden": "ممنوع الوصول",
+    "notFound": "غير موجود",
+    "validationError": "خطأ في التحقق"
+  }
+}

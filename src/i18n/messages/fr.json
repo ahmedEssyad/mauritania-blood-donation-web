@@ -1,0 +1,204 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "clear": "Effacer",
+    "submit": "Soumettre",
+    "retry": "Réessayer",
+    "refresh": "Actualiser"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "requests": "Demandes",
+    "profile": "Profil",
+    "history": "Historique",
+    "settings": "Paramètres",
+    "notifications": "Notifications",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "phone": "Numéro de téléphone",
+      "password": "Mot de passe",
+      "submit": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?",
+      "noAccount": "Pas de compte ?",
+      "register": "S'inscrire"
+    },
+    "register": {
+      "title": "Inscription",
+      "phone": "Numéro de téléphone",
+      "name": "Nom complet",
+      "bloodType": "Groupe sanguin",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "submit": "S'inscrire",
+      "hasAccount": "Déjà un compte ?",
+      "login": "Se connecter"
+    },
+    "otp": {
+      "title": "Vérification",
+      "subtitle": "Entrez le code envoyé à votre téléphone",
+      "code": "Code de vérification",
+      "submit": "Vérifier",
+      "resend": "Renvoyer le code",
+      "timer": "Renvoyer dans {seconds}s"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "quickActions": {
+      "title": "Actions rapides",
+      "createRequest": "Créer une demande",
+      "findDonors": "Trouver des donneurs",
+      "viewHistory": "Voir l'historique"
+    },
+    "stats": {
+      "totalDonations": "Total des dons",
+      "thisYear": "Cette année",
+      "rating": "Note moyenne",
+      "responses": "Réponses"
+    },
+    "recentRequests": {
+      "title": "Demandes récentes",
+      "empty": "Aucune demande récente",
+      "viewAll": "Voir toutes"
+    }
+  },
+  "bloodRequests": {
+    "title": "Demandes de sang",
+    "create": {
+      "title": "Créer une demande",
+      "bloodType": "Groupe sanguin requis",
+      "urgency": "Niveau d'urgence",
+      "description": "Description",
+      "location": "Lieu",
+      "hospital": "Hôpital",
+      "contactPhone": "Téléphone de contact",
+      "condition": "Condition médicale",
+      "submit": "Créer la demande"
+    },
+    "filters": {
+      "all": "Toutes",
+      "active": "Actives",
+      "emergency": "Urgences",
+      "nearby": "Proximité"
+    },
+    "urgency": {
+      "low": "Faible",
+      "medium": "Moyenne",
+      "high": "Élevée",
+      "urgent": "Urgente"
+    },
+    "status": {
+      "active": "Active",
+      "fulfilled": "Satisfaite",
+      "cancelled": "Annulée",
+      "expired": "Expirée"
+    },
+    "details": {
+      "title": "Détails de la demande",
+      "respond": "Répondre",
+      "close": "Fermer",
+      "responses": "Réponses ({count})",
+      "distance": "{distance} km",
+      "createdAt": "Créée le",
+      "expiresAt": "Expire le"
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "personal": {
+      "title": "Informations personnelles",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "bloodType": "Groupe sanguin",
+      "lastDonation": "Dernier don",
+      "eligibility": "Éligibilité",
+      "eligible": "Éligible",
+      "notEligible": "Non éligible",
+      "nextEligible": "Prochaine éligibilité"
+    },
+    "stats": {
+      "title": "Statistiques",
+      "totalDonations": "Total des dons",
+      "thisYear": "Cette année",
+      "rating": "Note moyenne",
+      "achievements": "Réalisations"
+    },
+    "edit": {
+      "title": "Modifier le profil",
+      "save": "Enregistrer les modifications"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "empty": "Aucune notification",
+    "types": {
+      "blood_request_created": "Nouvelle demande de sang",
+      "blood_request_response": "Réponse à votre demande",
+      "donor_selected": "Donneur sélectionné",
+      "donation_confirmed": "Don confirmé",
+      "donation_received": "Don reçu",
+      "eligibility_reminder": "Rappel d'éligibilité"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": {
+      "title": "Langue",
+      "french": "Français",
+      "arabic": "العربية"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "bloodRequests": "Demandes de sang",
+      "eligibilityReminders": "Rappels d'éligibilité",
+      "donationConfirmations": "Confirmations de don",
+      "sound": "Son",
+      "vibration": "Vibration",
+      "maxDistance": "Distance maximale (km)"
+    },
+    "privacy": {
+      "title": "Confidentialité",
+      "deleteAccount": "Supprimer le compte"
+    }
+  },
+  "bloodTypes": {
+    "A+": "A+",
+    "A-": "A-",
+    "B+": "B+",
+    "B-": "B-",
+    "AB+": "AB+",
+    "AB-": "AB-",
+    "O+": "O+",
+    "O-": "O-"
+  },
+  "errors": {
+    "required": "Ce champ est requis",
+    "invalidPhone": "Numéro de téléphone invalide",
+    "invalidEmail": "Email invalide",
+    "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "networkError": "Erreur de réseau",
+    "serverError": "Erreur du serveur",
+    "unauthorized": "Non autorisé",
+    "forbidden": "Accès interdit",
+    "notFound": "Non trouvé",
+    "validationError": "Erreur de validation"
+  }
+}
