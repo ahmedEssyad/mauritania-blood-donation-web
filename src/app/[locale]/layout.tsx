@@ -4,7 +4,6 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { PWAProvider } from '@/contexts/PWAContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AuthStabilizer } from '@/components/AuthStabilizer';
-import { AuthDebug } from '@/components/AuthDebug';
 import { cn } from '@/lib/utils';
 import MonitoringInitializer from '@/components/MonitoringInitializer';
 
@@ -39,7 +38,6 @@ export default async function LocaleLayout({
         <NextIntlClientProvider locale={validLocale} messages={messages}>
           <AuthProvider>
             <AuthStabilizer />
-            <AuthDebug />
             {children}
           </AuthProvider>
         </NextIntlClientProvider>
