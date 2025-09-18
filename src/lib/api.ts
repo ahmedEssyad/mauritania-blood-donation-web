@@ -415,6 +415,12 @@ class ApiService {
     const response = await this.client.get('/notifications/unread-count');
     return response.data;
   }
+
+  // User account deletion
+  async deleteAccount(): Promise<ApiResponse> {
+    const response = await this.client.delete('/user/account');
+    return response.data;
+  }
 }
 
 export default new ApiService();

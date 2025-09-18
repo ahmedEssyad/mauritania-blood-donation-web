@@ -19,11 +19,46 @@
     "retry": "Réessayer",
     "refresh": "Actualiser",
     "appName": "Donation de Sang Mauritanie",
-    "appNameShort": "DonSang MR",
+    "appNameShort": "Munkidh",
     "phone": "Numéro de téléphone",
     "continue": "Continuer",
     "creating": "Création en cours...",
     "description": "Description"
+  },
+  "landing": {
+    "hero": {
+      "title": "Sauvez des vies avec votre don de sang",
+      "subtitle": "Rejoignez notre communauté de donneurs en Mauritanie et aidez à sauver des vies. Chaque don compte.",
+      "cta": "Commencer maintenant",
+      "login": "Se connecter",
+      "register": "S'inscrire"
+    },
+    "features": {
+      "title": "Pourquoi choisir Munkidh ?",
+      "emergency": {
+        "title": "Urgences rapides",
+        "description": "Répondez rapidement aux demandes urgentes de sang dans votre région"
+      },
+      "location": {
+        "title": "Géolocalisation",
+        "description": "Trouvez les donneurs et demandes les plus proches de vous"
+      },
+      "secure": {
+        "title": "Sécurisé et fiable",
+        "description": "Plateforme sécurisée avec vérification des utilisateurs"
+      }
+    },
+    "install": {
+      "title": "Installez l'application",
+      "description": "Accédez rapidement à Munkidh depuis votre écran d'accueil",
+      "install": "Installer l'app",
+      "later": "Plus tard"
+    },
+    "language": {
+      "title": "Choisissez votre langue",
+      "french": "Français",
+      "arabic": "العربية"
+    }
   },
   "navigation": {
     "dashboard": "Tableau de bord",

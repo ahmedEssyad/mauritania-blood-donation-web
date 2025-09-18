@@ -3,6 +3,8 @@ import { getMessages } from 'next-intl/server';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { PWAProvider } from '@/contexts/PWAContext';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { AuthStabilizer } from '@/components/AuthStabilizer';
+import { AuthDebug } from '@/components/AuthDebug';
 import { cn } from '@/lib/utils';
 import MonitoringInitializer from '@/components/MonitoringInitializer';
 
@@ -24,7 +26,7 @@ export default async function LocaleLayout({
         <meta name="theme-color" content="#ef4444" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="DonSang MR" />
+        <meta name="apple-mobile-web-app-title" content="Munkidh" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
       <body
@@ -36,6 +38,8 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider locale={validLocale} messages={messages}>
           <AuthProvider>
+            <AuthStabilizer />
+            <AuthDebug />
             {children}
           </AuthProvider>
         </NextIntlClientProvider>

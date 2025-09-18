@@ -1,7 +1,7 @@
 {
-  "name": "Donation de Sang Mauritanie",
-  "short_name": "DonSang MR",
-  "description": "Application de don de sang pour la Mauritanie",
+  "name": "Munkidh - منقذ",
+  "short_name": "Munkidh",
+  "description": "Application de don de sang pour la Mauritanie - Munkidh",
   "start_url": "/fr",
   "display": "standalone",
   "background_color": "#ffffff",

@@ -19,11 +19,46 @@
     "retry": "إعادة المحاولة",
     "refresh": "تحديث",
     "appName": "تبرع الدم موريتانيا",
-    "appNameShort": "DonSang MR",
+    "appNameShort": "Munkidh",
     "phone": "رقم الهاتف",
     "continue": "متابعة",
     "creating": "جاري الإنشاء...",
     "description": "الوصف"
+  },
+  "landing": {
+    "hero": {
+      "title": "أنقذ الأرواح بتبرعك بالدم",
+      "subtitle": "انضم إلى مجتمع المتبرعين في موريتانيا وساعد في إنقاذ الأرواح. كل تبرع مهم.",
+      "cta": "ابدأ الآن",
+      "login": "تسجيل الدخول",
+      "register": "إنشاء حساب"
+    },
+    "features": {
+      "title": "لماذا تختار Munkidh (منقذ)؟",
+      "emergency": {
+        "title": "حالات الطوارئ السريعة",
+        "description": "استجب بسرعة لطلبات الدم العاجلة في منطقتك"
+      },
+      "location": {
+        "title": "تحديد الموقع الجغرافي",
+        "description": "اعثر على أقرب المتبرعين والطلبات إليك"
+      },
+      "secure": {
+        "title": "آمن وموثوق",
+        "description": "منصة آمنة مع التحقق من هوية المستخدمين"
+      }
+    },
+    "install": {
+      "title": "ثبت التطبيق",
+      "description": "اوصل بسرعة إلى Munkidh (منقذ) من شاشتك الرئيسية",
+      "install": "ثبت التطبيق",
+      "later": "لاحقاً"
+    },
+    "language": {
+      "title": "اختر لغتك",
+      "french": "Français",
+      "arabic": "العربية"
+    }
   },
   "navigation": {
     "dashboard": "لوحة المعلومات",

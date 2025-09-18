@@ -43,6 +43,8 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -96,7 +98,42 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
 
   const handleLogout = async () => {
     await logout();
-    router.push(`/${locale}/auth/connexion`);
+    router.push(`/${locale}`);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!showDeleteConfirm) {
+      setShowDeleteConfirm(true);
+      // Auto-reset after 10 seconds if user doesn't confirm
+      setTimeout(() => {
+        setShowDeleteConfirm(false);
+      }, 10000);
+      return;
+    }
+
+    setIsDeleting(true);
+    setError(null);
+
+    try {
+      const response = await apiService.deleteAccount();
+
+      if (response.success) {
+        // Clear all local storage
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // Redirect to landing page with success message
+        router.push(`/${locale}?deleted=true`);
+      } else {
+        throw new Error(response.message || 'Failed to delete account');
+      }
+    } catch (error: any) {
+      console.error('Delete account error:', error);
+      setError(error.message || 'Une erreur est survenue lors de la suppression du compte');
+      setShowDeleteConfirm(false);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Test notification sound
@@ -450,10 +487,29 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                         <div className="text-sm text-red-600">
                           {t('settings.privacy.deleteAccountDesc')}
                         </div>
+                        {showDeleteConfirm && (
+                          <div className="text-sm text-red-700 mt-2 font-medium">
+                            {locale === 'ar'
+                              ? 'انقر مرة أخرى للتأكيد - هذا الإجراء لا يمكن التراجع عنه!'
+                              : 'Cliquez encore pour confirmer - cette action est irréversible !'
+                            }
+                          </div>
+                        )}
                       </div>
-                      <Button variant="destructive">
+                      <Button
+                        variant="destructive"
+                        onClick={handleDeleteAccount}
+                        disabled={isDeleting}
+                        className={showDeleteConfirm ? 'bg-red-600 hover:bg-red-700' : ''}
+                      >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        {t('settings.privacy.delete')}
+                        {isDeleting ? (
+                          locale === 'ar' ? 'جاري الحذف...' : 'Suppression...'
+                        ) : showDeleteConfirm ? (
+                          locale === 'ar' ? 'تأكيد الحذف' : 'Confirmer suppression'
+                        ) : (
+                          t('settings.privacy.delete')
+                        )}
                       </Button>
                     </div>
                   </div>

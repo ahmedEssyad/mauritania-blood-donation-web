@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Donation de Sang Mauritanie',
-  description: 'Application de don de sang pour la Mauritanie avec support français et arabe',
+  title: 'Munkidh - منقذ',
+  description: 'Munkidh - Application de don de sang pour la Mauritanie avec support français et arabe',
   manifest: '/manifest.json',
   themeColor: '#ef4444',
   viewport: {

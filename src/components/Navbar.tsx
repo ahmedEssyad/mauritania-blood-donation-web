@@ -35,7 +35,7 @@ export default function Navbar({ locale }: NavbarProps) {
 
   const handleLogout = async () => {
     await logout();
-    router.push(`/${locale}/auth/connexion`);
+    router.push(`/${locale}`);
   };
 
   const switchLanguage = (newLocale: string) => {
@@ -94,7 +94,7 @@ export default function Navbar({ locale }: NavbarProps) {
                 <Droplets className="h-6 w-6 text-white" />
               </div>
               <span className="font-bold text-xl text-gray-900 hidden sm:block">
-                DonSang MR
+                Munkidh
               </span>
             </Link>
           </div>
