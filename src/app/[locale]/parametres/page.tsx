@@ -129,7 +129,11 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
       }
     } catch (error: any) {
       console.error('Delete account error:', error);
-      setError(error.message || 'Une erreur est survenue lors de la suppression du compte');
+      // Show user-friendly error message based on the response
+      const errorMessage = error.response?.data?.message ||
+                          error.message ||
+                          (locale === 'ar' ? 'حدث خطأ أثناء حذف الحساب' : 'Une erreur est survenue lors de la suppression du compte');
+      setError(errorMessage);
       setShowDeleteConfirm(false);
     } finally {
       setIsDeleting(false);
