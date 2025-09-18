@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslations } from 'next-intl';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Navbar from '@/components/Navbar';
@@ -24,7 +25,9 @@ import { fr, ar } from 'date-fns/locale';
 import apiService from '@/lib/api';
 import { Notification, NotificationType } from '@/types';
 
-export default function NotificationsPage({ params: { locale } }: { params: { locale: string } }) {
+export default function NotificationsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = React.use(params);
+
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
