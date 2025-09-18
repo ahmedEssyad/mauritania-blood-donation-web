@@ -72,13 +72,13 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
       const response = await apiService.updateNotificationPreferences(notificationPrefs);
 
       if (response.success) {
-        setSuccess('Préférences sauvegardées avec succès');
+        setSuccess(t('settings.notifications.saveSuccess'));
         setTimeout(() => setSuccess(null), 3000);
       } else {
-        setError('Erreur lors de la sauvegarde');
+        setError(t('settings.notifications.saveError'));
       }
     } catch (err: any) {
-      setError(err.message || 'Erreur réseau');
+      setError(err.message || t('settings.notifications.networkError'));
     } finally {
       setIsSaving(false);
     }
@@ -127,7 +127,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                   {t('settings.title')}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Personnalisez votre expérience et gérez vos préférences
+                  {t('settings.subtitle')}
                 </p>
               </div>
             </div>
@@ -153,9 +153,9 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
             <TabsContent value="notifications" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Préférences de notifications</CardTitle>
+                  <CardTitle>{t('settings.notifications.preferencesTitle')}</CardTitle>
                   <CardDescription>
-                    Choisissez les types de notifications que vous souhaitez recevoir
+                    {t('settings.notifications.preferencesDescription')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -167,7 +167,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                           {t('settings.notifications.bloodRequests')}
                         </Label>
                         <div className="text-sm text-gray-500">
-                          Nouvelles demandes de sang dans votre région
+                          {t('settings.notifications.bloodRequestsDesc')}
                         </div>
                       </div>
                       <Switch
@@ -184,7 +184,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                           {t('settings.notifications.eligibilityReminders')}
                         </Label>
                         <div className="text-sm text-gray-500">
-                          Rappels quand vous êtes de nouveau éligible pour donner
+                          {t('settings.notifications.eligibilityRemindersDesc')}
                         </div>
                       </div>
                       <Switch
@@ -201,7 +201,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                           {t('settings.notifications.donationConfirmations')}
                         </Label>
                         <div className="text-sm text-gray-500">
-                          Confirmations et updates sur vos dons
+                          {t('settings.notifications.donationConfirmationsDesc')}
                         </div>
                       </div>
                       <Switch
@@ -215,7 +215,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
 
                   {/* Sound Settings */}
                   <div className="border-t pt-6 space-y-4">
-                    <h3 className="text-lg font-medium">Paramètres audio</h3>
+                    <h3 className="text-lg font-medium">{t('settings.notifications.audioSettings')}</h3>
 
                     <div className="flex items-center justify-between">
                       <div className="space-y-0.5">
@@ -228,7 +228,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                           {t('settings.notifications.sound')}
                         </Label>
                         <div className="text-sm text-gray-500">
-                          Sons pour les notifications importantes
+                          {t('settings.notifications.soundDesc')}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -238,7 +238,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                           onClick={testNotificationSound}
                           disabled={!notificationPrefs.soundEnabled}
                         >
-                          Tester
+                          {t('settings.notifications.testSound')}
                         </Button>
                         <Switch
                           checked={notificationPrefs.soundEnabled}
@@ -256,7 +256,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                           {t('settings.notifications.vibration')}
                         </Label>
                         <div className="text-sm text-gray-500">
-                          Vibrations pour les notifications
+                          {t('settings.notifications.vibrationDesc')}
                         </div>
                       </div>
                       <Switch
@@ -270,7 +270,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
 
                   {/* Distance & Time Settings */}
                   <div className="border-t pt-6 space-y-4">
-                    <h3 className="text-lg font-medium">Paramètres de localisation et timing</h3>
+                    <h3 className="text-lg font-medium">{t('settings.notifications.locationSettings')}</h3>
 
                     <div>
                       <Label className="text-base flex items-center mb-2">
@@ -294,13 +294,13 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                         </div>
                       </div>
                       <div className="text-sm text-gray-500 mt-1">
-                        Distance maximale pour recevoir des notifications de demandes
+                        {t('settings.notifications.maxDistanceDesc')}
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="nightStart">Mode silencieux - Début</Label>
+                        <Label htmlFor="nightStart">{t('settings.notifications.nightModeStart')}</Label>
                         <Input
                           id="nightStart"
                           type="time"
@@ -311,7 +311,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                         />
                       </div>
                       <div>
-                        <Label htmlFor="nightEnd">Mode silencieux - Fin</Label>
+                        <Label htmlFor="nightEnd">{t('settings.notifications.nightModeEnd')}</Label>
                         <Input
                           id="nightEnd"
                           type="time"
@@ -323,7 +323,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                       </div>
                     </div>
                     <div className="text-sm text-gray-500">
-                      Aucune notification sonore pendant ces heures
+                      {t('settings.notifications.nightModeDesc')}
                     </div>
                   </div>
 
@@ -350,7 +350,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                       {isSaving ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                          Sauvegarde...
+                          {t('settings.notifications.saving')}
                         </>
                       ) : (
                         <>
@@ -370,7 +370,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                 <CardHeader>
                   <CardTitle>{t('settings.language.title')}</CardTitle>
                   <CardDescription>
-                    Choisissez votre langue préférée pour l'interface
+                    {t('settings.language.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -382,7 +382,7 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                     >
                       <div className="text-left">
                         <div className="font-medium">{t('settings.language.french')}</div>
-                        <div className="text-sm opacity-70">Langue principale</div>
+                        <div className="text-sm opacity-70">{t('settings.language.primaryLanguage')}</div>
                       </div>
                     </Button>
 
@@ -393,13 +393,13 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                     >
                       <div className="text-left">
                         <div className="font-medium">{t('settings.language.arabic')}</div>
-                        <div className="text-sm opacity-70">اللغة الثانوية</div>
+                        <div className="text-sm opacity-70">{t('settings.language.secondaryLanguage')}</div>
                       </div>
                     </Button>
                   </div>
 
                   <div className="text-sm text-gray-500 mt-4">
-                    L'application prend en charge le français et l'arabe avec un support RTL complet pour l'arabe.
+                    {t('settings.language.supportInfo')}
                   </div>
                 </CardContent>
               </Card>
@@ -411,34 +411,34 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                 <CardHeader>
                   <CardTitle>{t('settings.privacy.title')}</CardTitle>
                   <CardDescription>
-                    Gérez vos données personnelles et la confidentialité
+                    {t('settings.privacy.description')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Account Info */}
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h3 className="font-medium text-gray-900 mb-2">Informations du compte</h3>
+                    <h3 className="font-medium text-gray-900 mb-2">{t('settings.privacy.accountInfo')}</h3>
                     <div className="space-y-2 text-sm">
-                      <div><strong>Nom:</strong> {user?.name || 'Non renseigné'}</div>
-                      <div><strong>Téléphone:</strong> {user?.phone}</div>
-                      <div><strong>Groupe sanguin:</strong> {user?.bloodType}</div>
-                      <div><strong>Membre depuis:</strong> {user?.joinDate ? new Date(user.joinDate).toLocaleDateString('fr-FR') : 'Date inconnue'}</div>
+                      <div><strong>{t('settings.privacy.name')}:</strong> {user?.name || t('settings.privacy.notProvided')}</div>
+                      <div><strong>{t('settings.privacy.phone')}:</strong> {user?.phone}</div>
+                      <div><strong>{t('settings.privacy.bloodType')}:</strong> {user?.bloodType}</div>
+                      <div><strong>{t('settings.privacy.memberSince')}:</strong> {user?.joinDate ? new Date(user.joinDate).toLocaleDateString(locale === 'ar' ? 'ar-MR' : 'fr-FR') : t('settings.privacy.unknownDate')}</div>
                     </div>
                   </div>
 
                   {/* Data Management */}
                   <div className="space-y-4">
-                    <h3 className="font-medium text-gray-900">Gestion des données</h3>
+                    <h3 className="font-medium text-gray-900">{t('settings.privacy.dataManagement')}</h3>
 
                     <div className="flex items-center justify-between p-4 border rounded-lg">
                       <div>
-                        <div className="font-medium">Exporter mes données</div>
+                        <div className="font-medium">{t('settings.privacy.exportData')}</div>
                         <div className="text-sm text-gray-500">
-                          Télécharger une copie de toutes vos données
+                          {t('settings.privacy.exportDataDesc')}
                         </div>
                       </div>
                       <Button variant="outline">
-                        Exporter
+                        {t('settings.privacy.export')}
                       </Button>
                     </div>
 
@@ -448,12 +448,12 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                           {t('settings.privacy.deleteAccount')}
                         </div>
                         <div className="text-sm text-red-600">
-                          Supprimer définitivement votre compte et toutes vos données
+                          {t('settings.privacy.deleteAccountDesc')}
                         </div>
                       </div>
                       <Button variant="destructive">
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Supprimer
+                        {t('settings.privacy.delete')}
                       </Button>
                     </div>
                   </div>

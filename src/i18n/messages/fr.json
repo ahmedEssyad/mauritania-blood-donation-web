@@ -99,11 +99,15 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
+    "welcome": "Bonjour {name}, bienvenue sur votre tableau de bord",
     "quickActions": {
       "title": "Actions rapides",
       "createRequest": "Créer une demande",
+      "createRequestDesc": "Créer une nouvelle demande de sang",
       "findDonors": "Trouver des donneurs",
-      "viewHistory": "Voir l'historique"
+      "findDonorsDesc": "Trouver des donneurs à proximité",
+      "viewHistory": "Voir l'historique",
+      "viewHistoryDesc": "Voir votre historique de dons"
     },
     "stats": {
       "totalDonations": "Total des dons",
@@ -113,12 +117,21 @@
     },
     "recentRequests": {
       "title": "Demandes récentes",
+      "description": "Dernières demandes de sang dans votre région",
       "empty": "Aucune demande récente",
-      "viewAll": "Voir toutes"
+      "viewAll": "Voir toutes",
+      "hospital": "Hôpital",
+      "urgentRequest": "Demande de sang urgente",
+      "location": "Localisation"
     }
   },
   "bloodRequests": {
     "title": "Demandes de sang",
+    "subtitle": "Trouvez et répondez aux demandes de sang dans votre région",
+    "noRequestsFound": "Aucune demande trouvée",
+    "noActiveRequests": "Il n'y a pas de demandes de sang actives dans votre région",
+    "tryModifyFilters": "Essayez de modifier vos filtres de recherche",
+    "loadMore": "Charger plus de demandes",
     "create": {
       "title": "Créer une demande",
       "subtitle": "Créez une demande de sang pour recevoir de l'aide de donneurs volontaires",
@@ -132,7 +145,51 @@
       "hospital": "Hôpital",
       "contactPhone": "Téléphone de contact",
       "condition": "Condition médicale",
-      "submit": "Créer la demande"
+      "submit": "Créer la demande",
+      "selectBloodType": "Sélectionner le groupe sanguin",
+      "descriptionPlaceholder": "Décrivez la situation et pourquoi le don de sang est nécessaire...",
+      "hospitalPlaceholder": "Nom de l'hôpital ou clinique",
+      "phonePlaceholder": "+222 XX XX XX XX",
+      "conditionPlaceholder": "Condition médicale ou type d'intervention",
+      "doctorLabel": "Nom du médecin (optionnel)",
+      "optional": "optionnel",
+      "doctorPlaceholder": "Dr. Nom du médecin responsable",
+      "locationError": "Veuillez sélectionner une localisation",
+      "createError": "Erreur lors de la création de la demande",
+      "networkError": "Erreur réseau lors de la création de la demande",
+      "validationErrors": {
+        "descriptionMin": "La description doit contenir au moins 10 caractères",
+        "phoneInvalid": "Numéro de téléphone invalide",
+        "hospitalRequired": "Nom de l'hôpital requis"
+      },
+      "success": {
+        "title": "Demande créée avec succès !",
+        "message": "Votre demande de sang a été publiée. Les donneurs de votre région recevront une notification.",
+        "viewAll": "Voir toutes les demandes",
+        "backToDashboard": "Retour au tableau de bord"
+      },
+      "tips": {
+        "title": "Conseils importants",
+        "realUrgency": {
+          "title": "Urgence réelle",
+          "description": "Ne créez une demande urgente que dans des situations critiques nécessitant un don immédiat."
+        },
+        "accurateInfo": {
+          "title": "Informations précises",
+          "description": "Fournissez des informations claires et complètes pour faciliter la réponse des donneurs."
+        },
+        "exactLocation": {
+          "title": "Localisation exacte",
+          "description": "Indiquez l'emplacement précis de l'hôpital pour que les donneurs puissent vous trouver facilement."
+        }
+      },
+      "compatibility": {
+        "title": "Groupes sanguins compatibles",
+        "oNegative": "Donneur universel",
+        "abPositive": "Receveur universel",
+        "aPositive": "Peut recevoir A+, A-, O+, O-",
+        "bPositive": "Peut recevoir B+, B-, O+, O-"
+      }
     },
     "filters": {
       "all": "Toutes",
@@ -164,16 +221,29 @@
   },
   "profile": {
     "title": "Profil",
+    "subtitle": "Gérez vos informations personnelles et vos préférences",
     "personal": {
       "title": "Informations personnelles",
+      "description": "Informations de base sur votre profil de donneur",
       "name": "Nom",
       "phone": "Téléphone",
       "bloodType": "Groupe sanguin",
       "lastDonation": "Dernier don",
+      "memberSince": "Membre depuis",
       "eligibility": "Éligibilité",
       "eligible": "Éligible",
+      "eligibleMessage": "Vous êtes éligible pour donner du sang",
       "notEligible": "Non éligible",
-      "nextEligible": "Prochaine éligibilité"
+      "nextEligibleDate": "Prochaine éligibilité: {date}",
+      "contactDoctor": "Contactez votre médecin pour plus d'informations",
+      "notProvided": "Non renseigné",
+      "unknownDate": "Date inconnue",
+      "noDonationRecorded": "Aucun don enregistré",
+      "selectBloodType": "Sélectionner votre groupe sanguin",
+      "saving": "Enregistrement...",
+      "updateError": "Erreur lors de la mise à jour du profil",
+      "networkError": "Erreur réseau",
+      "nameMinLength": "Le nom doit contenir au moins 2 caractères"
     },
     "stats": {
       "title": "Statistiques",
@@ -187,10 +257,77 @@
       "save": "Enregistrer les modifications"
     }
   },
+  "history": {
+    "title": "Historique",
+    "subtitle": "Historique de vos dons et demandes de sang",
+    "export": "Exporter",
+    "refreshing": "Actualisation...",
+    "loadingError": "Erreur lors du chargement de l'historique",
+    "networkError": "Erreur réseau",
+    "tabs": {
+      "all": "Tous",
+      "confirmed": "Confirmés",
+      "pending": "En attente"
+    },
+    "status": {
+      "confirmed": "Confirmé",
+      "pending": "En attente",
+      "disputed": "Contesté",
+      "cancelled": "Annulé"
+    },
+    "stats": {
+      "totalDonations": "Total des dons",
+      "thisYear": "Cette année",
+      "averageRating": "Note moyenne"
+    },
+    "donation": {
+      "bloodDonation": "Don de sang",
+      "requester": "Demandeur",
+      "donor": "Donneur",
+      "anonymous": "Anonyme",
+      "notes": "Notes",
+      "confirmationRequired": "Confirmation requise avant le"
+    },
+    "empty": {
+      "noHistory": "Aucun historique de don",
+      "noConfirmed": "Aucun don confirmé",
+      "noPending": "Aucun don en attente",
+      "startDonating": "Commencez par répondre à une demande de sang pour voir votre historique ici.",
+      "changeFilter": "Modifiez le filtre pour voir d'autres types de dons.",
+      "viewAllDonations": "Voir tous les dons"
+    },
+    "error": {
+      "title": "Erreur de chargement",
+      "retry": "Réessayer"
+    }
+  },
   "notifications": {
     "title": "Notifications",
     "markAllRead": "Tout marquer comme lu",
     "empty": "Aucune notification",
+    "unreadCount": {
+      "single": "{count} notification non lue",
+      "plural": "{count} notifications non lues",
+      "allRead": "Toutes les notifications sont lues"
+    },
+    "actions": {
+      "refreshing": "Actualisation...",
+      "marking": "Marquage...",
+      "loadMore": "Charger plus de notifications",
+      "viewRequest": "Voir la demande",
+      "configure": "Configurer les notifications",
+      "new": "Nouveau"
+    },
+    "error": {
+      "title": "Erreur de chargement",
+      "loadingError": "Erreur lors du chargement des notifications",
+      "networkError": "Erreur réseau",
+      "retry": "Réessayer"
+    },
+    "empty": {
+      "title": "Aucune notification",
+      "description": "Vous recevrez des notifications lorsque des donneurs répondront à vos demandes ou lorsque de nouvelles demandes seront créées dans votre région."
+    },
     "types": {
       "blood_request_created": "Nouvelle demande de sang",
       "blood_request_response": "Réponse à votre demande",
@@ -202,23 +339,60 @@
   },
   "settings": {
     "title": "Paramètres",
+    "subtitle": "Personnalisez votre expérience et gérez vos préférences",
     "language": {
       "title": "Langue",
       "french": "Français",
-      "arabic": "العربية"
+      "arabic": "العربية",
+      "description": "Choisissez votre langue préférée pour l'interface",
+      "primaryLanguage": "Langue principale",
+      "secondaryLanguage": "اللغة الثانوية",
+      "supportInfo": "L'application prend en charge le français et l'arabe avec un support RTL complet pour l'arabe."
     },
     "notifications": {
       "title": "Notifications",
+      "preferencesTitle": "Préférences de notifications",
+      "preferencesDescription": "Choisissez les types de notifications que vous souhaitez recevoir",
       "bloodRequests": "Demandes de sang",
+      "bloodRequestsDesc": "Nouvelles demandes de sang dans votre région",
       "eligibilityReminders": "Rappels d'éligibilité",
+      "eligibilityRemindersDesc": "Rappels quand vous êtes de nouveau éligible pour donner",
       "donationConfirmations": "Confirmations de don",
+      "donationConfirmationsDesc": "Confirmations et updates sur vos dons",
+      "audioSettings": "Paramètres audio",
       "sound": "Son",
+      "soundDesc": "Sons pour les notifications importantes",
+      "testSound": "Tester",
       "vibration": "Vibration",
-      "maxDistance": "Distance maximale (km)"
+      "vibrationDesc": "Vibrations pour les notifications",
+      "locationSettings": "Paramètres de localisation et timing",
+      "maxDistance": "Distance maximale (km)",
+      "maxDistanceDesc": "Distance maximale pour recevoir des notifications de demandes",
+      "nightModeStart": "Mode silencieux - Début",
+      "nightModeEnd": "Mode silencieux - Fin",
+      "nightModeDesc": "Aucune notification sonore pendant ces heures",
+      "saveSuccess": "Préférences sauvegardées avec succès",
+      "saveError": "Erreur lors de la sauvegarde",
+      "networkError": "Erreur réseau",
+      "saving": "Sauvegarde..."
     },
     "privacy": {
       "title": "Confidentialité",
-      "deleteAccount": "Supprimer le compte"
+      "description": "Gérez vos données personnelles et la confidentialité",
+      "accountInfo": "Informations du compte",
+      "dataManagement": "Gestion des données",
+      "exportData": "Exporter mes données",
+      "exportDataDesc": "Télécharger une copie de toutes vos données",
+      "export": "Exporter",
+      "deleteAccount": "Supprimer le compte",
+      "deleteAccountDesc": "Supprimer définitivement votre compte et toutes vos données",
+      "delete": "Supprimer",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "bloodType": "Groupe sanguin",
+      "memberSince": "Membre depuis",
+      "notProvided": "Non renseigné",
+      "unknownDate": "Date inconnue"
     }
   },
   "bloodTypes": {
@@ -230,6 +404,21 @@
     "AB-": "AB-",
     "O+": "O+",
     "O-": "O-"
+  },
+  "locationPicker": {
+    "label": "Adresse ou localisation",
+    "placeholder": "Entrez l'adresse de l'hôpital ou du lieu",
+    "or": "ou",
+    "useCurrentLocation": "Utiliser ma position actuelle",
+    "positionSelected": "Position sélectionnée",
+    "coordinates": "Coordonnées",
+    "errors": {
+      "geolocationNotSupported": "La géolocalisation n'est pas supportée par ce navigateur",
+      "positionUnavailable": "Impossible d'obtenir votre position. Veuillez saisir l'adresse manuellement.",
+      "addressNotFound": "Adresse non trouvée. Veuillez vérifier l'adresse saisie.",
+      "geocodingServiceUnavailable": "Service de géocodage indisponible",
+      "geocodingError": "Erreur lors de la recherche de l'adresse. Veuillez réessayer."
+    }
   },
   "errors": {
     "title": "Une erreur s'est produite",

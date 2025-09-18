@@ -52,10 +52,10 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
         setDonations(donationsData);
         setError(null);
       } else {
-        setError('Erreur lors du chargement de l\'historique');
+        setError(t('history.loadingError'));
       }
     } catch (err: any) {
-      setError(err.message || 'Erreur réseau');
+      setError(err.message || t('history.networkError'));
       console.error('Failed to load donation history:', err);
     } finally {
       setLoading(false);
@@ -81,13 +81,13 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
   const getStatusText = (status: string) => {
     switch (status) {
       case 'confirmed':
-        return 'Confirmé';
+        return t('history.status.confirmed');
       case 'pending':
-        return 'En attente';
+        return t('history.status.pending');
       case 'disputed':
-        return 'Contesté';
+        return t('history.status.disputed');
       case 'cancelled':
-        return 'Annulé';
+        return t('history.status.cancelled');
       default:
         return status;
     }
@@ -114,7 +114,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
               </div>
               <div>
                 <div className="font-medium text-gray-900">
-                  Don de sang • {donation.request?.bloodType}
+                  {t('history.donation.bloodDonation')} • {donation.request?.bloodType}
                 </div>
                 <div className="text-sm text-gray-500">{timeAgo}</div>
               </div>
@@ -141,7 +141,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
             )}
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <Calendar className="h-4 w-4" />
-              <span>{new Date(donation.donationDate).toLocaleDateString('fr-FR')}</span>
+              <span>{new Date(donation.donationDate).toLocaleDateString(locale === 'ar' ? 'ar-MR' : 'fr-FR')}</span>
             </div>
           </div>
 
@@ -150,7 +150,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
             <div className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
               <User className="h-4 w-4" />
               <span>
-                {donation.userRole === 'donor' ? 'Demandeur' : 'Donneur'}: {donation.otherParty.name || 'Anonyme'}
+                {donation.userRole === 'donor' ? t('history.donation.requester') : t('history.donation.donor')}: {donation.otherParty.name || t('history.donation.anonymous')}
               </span>
             </div>
           )}
@@ -170,7 +170,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
 
             {donation.status === 'pending' && (
               <div className="text-xs text-gray-500">
-                Confirmation requise avant le {new Date(donation.confirmationDeadline).toLocaleDateString('fr-FR')}
+                {t('history.donation.confirmationRequired')} {new Date(donation.confirmationDeadline).toLocaleDateString(locale === 'ar' ? 'ar-MR' : 'fr-FR')}
               </div>
             )}
           </div>
@@ -178,7 +178,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
           {/* Notes */}
           {donation.notes && (
             <div className="mt-3 p-3 bg-gray-50 rounded text-sm text-gray-700">
-              <strong>Notes:</strong> {donation.notes}
+              <strong>{t('history.donation.notes')}:</strong> {donation.notes}
             </div>
           )}
         </CardContent>
@@ -226,7 +226,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                   {t('navigation.history')}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Historique de vos dons et demandes de sang
+                  {t('history.subtitle')}
                 </p>
               </div>
             </div>
@@ -239,12 +239,12 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                 size="sm"
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                {refreshing ? 'Actualisation...' : 'Actualiser'}
+                {refreshing ? t('history.refreshing') : t('common.refresh')}
               </Button>
 
               <Button variant="outline" size="sm">
                 <Download className="h-4 w-4 mr-2" />
-                Exporter
+                {t('history.export')}
               </Button>
             </div>
           </div>
@@ -253,9 +253,9 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
           <div className="mb-6">
             <Tabs value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
               <TabsList>
-                <TabsTrigger value="all">Tous</TabsTrigger>
-                <TabsTrigger value="confirmed">Confirmés</TabsTrigger>
-                <TabsTrigger value="pending">En attente</TabsTrigger>
+                <TabsTrigger value="all">{t('history.tabs.all')}</TabsTrigger>
+                <TabsTrigger value="confirmed">{t('history.tabs.confirmed')}</TabsTrigger>
+                <TabsTrigger value="pending">{t('history.tabs.pending')}</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -267,7 +267,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                 <div className="flex items-center">
                   <Heart className="h-8 w-8 text-red-500 mr-4" />
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total des dons</p>
+                    <p className="text-sm font-medium text-gray-600">{t('history.stats.totalDonations')}</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {donations.filter(d => d.status === 'confirmed').length}
                     </p>
@@ -281,7 +281,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                 <div className="flex items-center">
                   <Calendar className="h-8 w-8 text-blue-500 mr-4" />
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Cette année</p>
+                    <p className="text-sm font-medium text-gray-600">{t('history.stats.thisYear')}</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {donations.filter(d =>
                         d.status === 'confirmed' &&
@@ -298,7 +298,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                 <div className="flex items-center">
                   <Star className="h-8 w-8 text-yellow-500 mr-4" />
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Note moyenne</p>
+                    <p className="text-sm font-medium text-gray-600">{t('history.stats.averageRating')}</p>
                     <p className="text-2xl font-bold text-gray-900">
                       {donations.length > 0
                         ? (donations.reduce((acc, d) => acc + (d.donorRating || 0), 0) / donations.length).toFixed(1)
@@ -319,12 +319,12 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                   <History className="h-12 w-12 mx-auto" />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Erreur de chargement
+                  {t('history.error.title')}
                 </h3>
                 <p className="text-gray-600 mb-4">{error}</p>
                 <Button onClick={() => loadDonationHistory()} variant="outline">
                   <RefreshCw className="h-4 w-4 mr-2" />
-                  Réessayer
+                  {t('history.error.retry')}
                 </Button>
               </CardContent>
             </Card>
@@ -342,14 +342,14 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                 <Heart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
                   {filterStatus === 'all'
-                    ? 'Aucun historique de don'
-                    : `Aucun don ${filterStatus === 'confirmed' ? 'confirmé' : 'en attente'}`
+                    ? t('history.empty.noHistory')
+                    : filterStatus === 'confirmed' ? t('history.empty.noConfirmed') : t('history.empty.noPending')
                   }
                 </h3>
                 <p className="text-gray-600 mb-6">
                   {filterStatus === 'all'
-                    ? 'Commencez par répondre à une demande de sang pour voir votre historique ici.'
-                    : 'Modifiez le filtre pour voir d\'autres types de dons.'
+                    ? t('history.empty.startDonating')
+                    : t('history.empty.changeFilter')
                   }
                 </p>
                 {filterStatus !== 'all' && (
@@ -358,7 +358,7 @@ export default function DonationHistoryPage({ params: { locale } }: { params: { 
                     onClick={() => setFilterStatus('all')}
                   >
                     <Filter className="h-4 w-4 mr-2" />
-                    Voir tous les dons
+                    {t('history.empty.viewAllDonations')}
                   </Button>
                 )}
               </CardContent>

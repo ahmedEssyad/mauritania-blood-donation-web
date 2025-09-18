@@ -48,10 +48,10 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
         setNotifications(response.data.notifications || []);
         setError(null);
       } else {
-        setError('Erreur lors du chargement des notifications');
+        setError(t('notifications.error.loadingError'));
       }
     } catch (err: any) {
-      setError(err.message || 'Erreur réseau');
+      setError(err.message || t('notifications.error.networkError'));
       console.error('Failed to load notifications:', err);
     } finally {
       setLoading(false);
@@ -113,16 +113,7 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
   };
 
   const getNotificationTypeText = (type: NotificationType) => {
-    const translations = {
-      blood_request_created: 'Nouvelle demande de sang',
-      blood_request_response: 'Réponse à votre demande',
-      donor_selected: 'Donneur sélectionné',
-      donation_confirmed: 'Don confirmé',
-      donation_received: 'Don reçu',
-      eligibility_reminder: 'Rappel d\'éligibilité'
-    };
-
-    return translations[type] || type;
+    return t(`notifications.types.${type}`) || type;
   };
 
   const NotificationCard = ({ notification }: { notification: Notification }) => {
@@ -153,7 +144,7 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
                     </h3>
                     {!notification.isRead && (
                       <Badge className="bg-blue-100 text-blue-800 text-xs">
-                        Nouveau
+                        {t('notifications.actions.new')}
                       </Badge>
                     )}
                   </div>
@@ -191,7 +182,7 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
                       window.location.href = `/${locale}/demandes/${notification.data.requestId}`;
                     }}
                   >
-                    Voir la demande
+                    {t('notifications.actions.viewRequest')}
                   </Button>
                 </div>
               )}
@@ -249,8 +240,8 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
                 </h1>
                 <p className="text-gray-600 mt-1">
                   {unreadCount > 0
-                    ? `${unreadCount} notification${unreadCount > 1 ? 's' : ''} non lue${unreadCount > 1 ? 's' : ''}`
-                    : 'Toutes les notifications sont lues'
+                    ? t(unreadCount === 1 ? 'notifications.unreadCount.single' : 'notifications.unreadCount.plural', { count: unreadCount })
+                    : t('notifications.unreadCount.allRead')
                   }
                 </p>
               </div>
@@ -264,7 +255,7 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
                 size="sm"
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                {refreshing ? 'Actualisation...' : 'Actualiser'}
+                {refreshing ? t('notifications.actions.refreshing') : t('common.refresh')}
               </Button>
 
               {unreadCount > 0 && (
@@ -276,7 +267,7 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
                   {markingAllRead ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                      Marquage...
+                      {t('notifications.actions.marking')}
                     </>
                   ) : (
                     <>
@@ -295,12 +286,12 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
               <CardContent className="p-8 text-center">
                 <BellOff className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  Erreur de chargement
+                  {t('notifications.error.title')}
                 </h3>
                 <p className="text-gray-600 mb-4">{error}</p>
                 <Button onClick={() => loadNotifications()} variant="outline">
                   <RefreshCw className="h-4 w-4 mr-2" />
-                  Réessayer
+                  {t('notifications.error.retry')}
                 </Button>
               </CardContent>
             </Card>
@@ -319,7 +310,7 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
               {notifications.length >= 20 && (
                 <div className="text-center py-8">
                   <Button variant="outline">
-                    Charger plus de notifications
+                    {t('notifications.actions.loadMore')}
                   </Button>
                 </div>
               )}
@@ -329,14 +320,14 @@ export default function NotificationsPage({ params: { locale } }: { params: { lo
               <CardContent className="p-8 text-center">
                 <BellOff className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {t('notifications.empty')}
+                  {t('notifications.empty.title')}
                 </h3>
                 <p className="text-gray-600 mb-6">
-                  Vous recevrez des notifications lorsque des donneurs répondront à vos demandes ou lorsque de nouvelles demandes seront créées dans votre région.
+                  {t('notifications.empty.description')}
                 </p>
                 <Button variant="outline">
                   <Bell className="h-4 w-4 mr-2" />
-                  Configurer les notifications
+                  {t('notifications.actions.configure')}
                 </Button>
               </CardContent>
             </Card>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +18,7 @@ export default function LocationPicker({
   initialLocation,
   className = ''
 }: LocationPickerProps) {
+  const t = useTranslations();
   const [address, setAddress] = useState(initialLocation?.address || '');
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
     initialLocation ? { lat: initialLocation.lat, lng: initialLocation.lng } : null
@@ -30,7 +32,7 @@ export default function LocationPicker({
     setError(null);
 
     if (!navigator.geolocation) {
-      setError('La géolocalisation n\'est pas supportée par ce navigateur');
+      setError(t('locationPicker.errors.geolocationNotSupported'));
       setLoading(false);
       return;
     }
@@ -70,7 +72,7 @@ export default function LocationPicker({
       },
       (error) => {
         console.error('Geolocation error:', error);
-        setError('Impossible d\'obtenir votre position. Veuillez saisir l\'adresse manuellement.');
+        setError(t('locationPicker.errors.positionUnavailable'));
         setLoading(false);
       },
       {
@@ -137,14 +139,14 @@ export default function LocationPicker({
           setLocation({ lat: locationData.lat, lng: locationData.lng });
           onLocationSelect(locationData);
         } else {
-          setError('Adresse non trouvée. Veuillez vérifier l\'adresse saisie.');
+          setError(t('locationPicker.errors.addressNotFound'));
         }
       } else {
-        throw new Error('Service de géocodage indisponible');
+        throw new Error(t('locationPicker.errors.geocodingServiceUnavailable'));
       }
     } catch (error) {
       console.error('Geocoding error:', error);
-      setError('Erreur lors de la recherche de l\'adresse. Veuillez réessayer.');
+      setError(t('locationPicker.errors.geocodingError'));
     }
 
     setLoading(false);
@@ -158,12 +160,12 @@ export default function LocationPicker({
   return (
     <div className={`space-y-4 ${className}`}>
       <div>
-        <Label htmlFor="address">Adresse ou localisation</Label>
+        <Label htmlFor="address">{t('locationPicker.label')}</Label>
         <form onSubmit={handleAddressSubmit} className="flex space-x-2 mt-2">
           <Input
             id="address"
             type="text"
-            placeholder="Entrez l'adresse de l'hôpital ou du lieu"
+            placeholder={t('locationPicker.placeholder')}
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             className="flex-1"
@@ -176,7 +178,7 @@ export default function LocationPicker({
 
       <div className="flex items-center space-x-4">
         <div className="h-px bg-gray-300 flex-1" />
-        <span className="text-sm text-gray-500">ou</span>
+        <span className="text-sm text-gray-500">{t('locationPicker.or')}</span>
         <div className="h-px bg-gray-300 flex-1" />
       </div>
 
@@ -192,20 +194,20 @@ export default function LocationPicker({
         ) : (
           <Navigation className="h-4 w-4 mr-2" />
         )}
-        Utiliser ma position actuelle
+        {t('locationPicker.useCurrentLocation')}
       </Button>
 
       {location && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-3">
           <div className="flex items-center space-x-2 text-green-700">
             <MapPin className="h-4 w-4" />
-            <span className="text-sm font-medium">Position sélectionnée</span>
+            <span className="text-sm font-medium">{t('locationPicker.positionSelected')}</span>
           </div>
           <p className="text-sm text-green-600 mt-1 break-words">
             {address}
           </p>
           <p className="text-xs text-green-500 mt-1">
-            Coordonnées: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+            {t('locationPicker.coordinates')}: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
           </p>
         </div>
       )}

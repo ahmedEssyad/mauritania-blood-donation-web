@@ -27,17 +27,18 @@ import Link from 'next/link';
 import apiService from '@/lib/api';
 import { BloodType, UrgencyLevel } from '@/types';
 
-const createRequestSchema = z.object({
+// Create schema factory function to use translations
+const createRequestSchemaFactory = (t: any) => z.object({
   bloodType: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
   urgencyLevel: z.enum(['low', 'medium', 'high', 'urgent']),
-  description: z.string().min(10, 'La description doit contenir au moins 10 caractères').max(500),
-  contactPhone: z.string().min(8, 'Numéro de téléphone invalide'),
-  hospitalName: z.string().min(2, 'Nom de l\'hôpital requis'),
+  description: z.string().min(10, t('bloodRequests.create.validationErrors.descriptionMin')).max(500),
+  contactPhone: z.string().min(8, t('bloodRequests.create.validationErrors.phoneInvalid')),
+  hospitalName: z.string().min(2, t('bloodRequests.create.validationErrors.hospitalRequired')),
   condition: z.string().optional(),
   doctorName: z.string().optional(),
 });
 
-type CreateRequestFormData = z.infer<typeof createRequestSchema>;
+type CreateRequestFormData = z.infer<ReturnType<typeof createRequestSchemaFactory>>;
 
 export default function CreateRequestPage({ params: { locale } }: { params: { locale: string } }) {
   const [location, setLocation] = useState<{ lat: number; lng: number; address: string } | null>(null);
@@ -49,7 +50,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
   const t = useTranslations();
 
   const form = useForm<CreateRequestFormData>({
-    resolver: zodResolver(createRequestSchema),
+    resolver: zodResolver(createRequestSchemaFactory(t)),
     defaultValues: {
       bloodType: undefined,
       urgencyLevel: 'medium',
@@ -79,7 +80,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
 
   const onSubmit = async (data: CreateRequestFormData) => {
     if (!location) {
-      setError('Veuillez sélectionner une localisation');
+      setError(t('bloodRequests.create.locationError'));
       return;
     }
 
@@ -116,10 +117,10 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
           router.push(`/${locale}/demandes/${response.data._id}`);
         }, 2000);
       } else {
-        setError(response.message || 'Erreur lors de la création de la demande');
+        setError(response.message || t('bloodRequests.create.createError'));
       }
     } catch (err: any) {
-      setError(err.message || 'Erreur réseau lors de la création de la demande');
+      setError(err.message || t('bloodRequests.create.networkError'));
     } finally {
       setIsSubmitting(false);
     }
@@ -135,20 +136,20 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
               <CardContent className="p-8">
                 <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Demande créée avec succès !
+                  {t('bloodRequests.create.success.title')}
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  Votre demande de sang a été publiée. Les donneurs de votre région recevront une notification.
+                  {t('bloodRequests.create.success.message')}
                 </p>
                 <div className="space-x-4">
                   <Link href={`/${locale}/demandes`}>
                     <Button variant="outline">
-                      Voir toutes les demandes
+                      {t('bloodRequests.create.success.viewAll')}
                     </Button>
                   </Link>
                   <Link href={`/${locale}/dashboard`}>
                     <Button>
-                      Retour au tableau de bord
+                      {t('bloodRequests.create.success.backToDashboard')}
                     </Button>
                   </Link>
                 </div>
@@ -215,7 +216,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                               <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
                                   <SelectTrigger>
-                                    <SelectValue placeholder="Sélectionner le groupe sanguin" />
+                                    <SelectValue placeholder={t('bloodRequests.create.selectBloodType')} />
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
@@ -272,7 +273,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                                 {...field}
                                 rows={4}
                                 className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                placeholder="Décrivez la situation et pourquoi le don de sang est nécessaire..."
+                                placeholder={t('bloodRequests.create.descriptionPlaceholder')}
                               />
                             </FormControl>
                             <FormMessage />
@@ -289,7 +290,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                             <FormItem>
                               <FormLabel>{t('bloodRequests.create.hospital')}</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="Nom de l'hôpital ou clinique" />
+                                <Input {...field} placeholder={t('bloodRequests.create.hospitalPlaceholder')} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -303,7 +304,7 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                             <FormItem>
                               <FormLabel>{t('bloodRequests.create.contactPhone')}</FormLabel>
                               <FormControl>
-                                <Input {...field} type="tel" placeholder="+222 XX XX XX XX" />
+                                <Input {...field} type="tel" placeholder={t('bloodRequests.create.phonePlaceholder')} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -318,9 +319,9 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                           name="condition"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>{t('bloodRequests.create.condition')} (optionnel)</FormLabel>
+                              <FormLabel>{t('bloodRequests.create.condition')} ({t('bloodRequests.create.optional')})</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="Condition médicale ou type d'intervention" />
+                                <Input {...field} placeholder={t('bloodRequests.create.conditionPlaceholder')} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -332,9 +333,9 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                           name="doctorName"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Nom du médecin (optionnel)</FormLabel>
+                              <FormLabel>{t('bloodRequests.create.doctorLabel')}</FormLabel>
                               <FormControl>
-                                <Input {...field} placeholder="Dr. Nom du médecin responsable" />
+                                <Input {...field} placeholder={t('bloodRequests.create.doctorPlaceholder')} />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -392,26 +393,26 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-2">
                     <Hospital className="h-5 w-5 text-red-500" />
-                    <span>Conseils importants</span>
+                    <span>{t('bloodRequests.create.tips.title')}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4 text-sm">
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-1">Urgence réelle</h4>
+                    <h4 className="font-medium text-gray-900 mb-1">{t('bloodRequests.create.tips.realUrgency.title')}</h4>
                     <p className="text-gray-600">
-                      Ne créez une demande urgente que dans des situations critiques nécessitant un don immédiat.
+                      {t('bloodRequests.create.tips.realUrgency.description')}
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-1">Informations précises</h4>
+                    <h4 className="font-medium text-gray-900 mb-1">{t('bloodRequests.create.tips.accurateInfo.title')}</h4>
                     <p className="text-gray-600">
-                      Fournissez des informations claires et complètes pour faciliter la réponse des donneurs.
+                      {t('bloodRequests.create.tips.accurateInfo.description')}
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-medium text-gray-900 mb-1">Localisation exacte</h4>
+                    <h4 className="font-medium text-gray-900 mb-1">{t('bloodRequests.create.tips.exactLocation.title')}</h4>
                     <p className="text-gray-600">
-                      Indiquez l'emplacement précis de l'hôpital pour que les donneurs puissent vous trouver facilement.
+                      {t('bloodRequests.create.tips.exactLocation.description')}
                     </p>
                   </div>
                 </CardContent>
@@ -419,14 +420,14 @@ export default function CreateRequestPage({ params: { locale } }: { params: { lo
 
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-sm">Groupes sanguins compatibles</CardTitle>
+                  <CardTitle className="text-sm">{t('bloodRequests.create.compatibility.title')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-xs space-y-2">
-                    <div><strong>O-</strong>: Donneur universel</div>
-                    <div><strong>AB+</strong>: Receveur universel</div>
-                    <div><strong>A+</strong>: Peut recevoir A+, A-, O+, O-</div>
-                    <div><strong>B+</strong>: Peut recevoir B+, B-, O+, O-</div>
+                    <div><strong>O-</strong>: {t('bloodRequests.create.compatibility.oNegative')}</div>
+                    <div><strong>AB+</strong>: {t('bloodRequests.create.compatibility.abPositive')}</div>
+                    <div><strong>A+</strong>: {t('bloodRequests.create.compatibility.aPositive')}</div>
+                    <div><strong>B+</strong>: {t('bloodRequests.create.compatibility.bPositive')}</div>
                   </div>
                 </CardContent>
               </Card>

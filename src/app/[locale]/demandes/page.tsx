@@ -162,7 +162,7 @@ export default function BloodRequestsPage() {
                 {t('bloodRequests.title')}
               </h1>
               <p className="text-gray-600 mt-2">
-                Trouvez et répondez aux demandes de sang dans votre région
+                {t('bloodRequests.subtitle')}
               </p>
             </div>
 
@@ -227,7 +227,7 @@ export default function BloodRequestsPage() {
               {filteredRequests.length >= 10 && (
                 <div className="text-center py-8">
                   <Button variant="outline">
-                    Charger plus de demandes
+                    {t('bloodRequests.loadMore')}
                   </Button>
                 </div>
               )}
@@ -236,12 +236,12 @@ export default function BloodRequestsPage() {
             <div className="text-center py-12">
               <Heart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                Aucune demande trouvée
+                {t('bloodRequests.noRequestsFound')}
               </h3>
               <p className="text-gray-600 mb-6">
                 {filters.search || filters.bloodType !== 'all' || filters.urgency !== 'all'
-                  ? 'Essayez de modifier vos filtres de recherche'
-                  : 'Il n\'y a pas de demandes de sang actives dans votre région'
+                  ? t('bloodRequests.tryModifyFilters')
+                  : t('bloodRequests.noActiveRequests')
                 }
               </p>
               <div className="space-x-3">

@@ -14,7 +14,9 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const messages = await getMessages();
+  // Ensure we have a valid locale with fallback
+  const validLocale = locale && ['fr', 'ar'].includes(locale) ? locale : 'fr';
+  const messages = await getMessages({ locale: validLocale });
 
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
@@ -29,15 +31,10 @@ export default async function LocaleLayout({
         'min-h-screen bg-background font-sans antialiased',
         locale === 'ar' && 'font-arabic'
       )}>
-        <NextIntlClientProvider messages={messages}>
-          <ErrorBoundary>
-            <MonitoringInitializer />
-            <PWAProvider>
-              <AuthProvider>
-                {children}
-              </AuthProvider>
-            </PWAProvider>
-          </ErrorBoundary>
+        <NextIntlClientProvider locale={validLocale} messages={messages}>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
         </NextIntlClientProvider>
       </body>
     </html>

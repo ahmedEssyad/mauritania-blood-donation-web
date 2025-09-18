@@ -12,6 +12,11 @@ export default createMiddleware({
 });
 
 export const config = {
-  // Match only internationalized pathnames
-  matcher: ['/', '/(fr|ar)/:path*']
+  // Match only internationalized pathnames including dynamic segments
+  matcher: [
+    // Match all pathnames except for
+    // - Next.js internals
+    // - Static files
+    '/((?!_next|.*\\..*|favicon.ico).*)'
+  ]
 };

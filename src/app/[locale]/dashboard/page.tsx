@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
+import { usePathname } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Navbar from '@/components/Navbar';
 import { Button } from '@/components/ui/button';
@@ -22,13 +23,20 @@ import Link from 'next/link';
 import apiService from '@/lib/api';
 import { BloodRequest, UserStats } from '@/types';
 
-export default function DashboardPage({ params: { locale } }: { params: { locale: string } }) {
+export default function DashboardPage() {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [recentRequests, setRecentRequests] = useState<BloodRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
   const { user } = useAuth();
   const t = useTranslations();
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1] || 'fr'; // Extract locale from pathname
+
+  // Temporary debugging
+  console.log('🔍 Dashboard Debug - Pathname:', pathname);
+  console.log('🔍 Dashboard Debug - Locale:', locale);
+  console.log('🔍 Dashboard Debug - Dashboard title translation:', t('dashboard.title'));
 
   useEffect(() => {
     loadDashboardData();
@@ -58,21 +66,21 @@ export default function DashboardPage({ params: { locale } }: { params: { locale
   const quickActions = [
     {
       title: t('dashboard.quickActions.createRequest'),
-      description: 'Créer une nouvelle demande de sang',
+      description: t('dashboard.quickActions.createRequestDesc'),
       href: `/${locale}/demandes/creer`,
       icon: Plus,
       color: 'bg-red-500',
     },
     {
       title: t('dashboard.quickActions.findDonors'),
-      description: 'Trouver des donneurs à proximité',
+      description: t('dashboard.quickActions.findDonorsDesc'),
       href: `/${locale}/demandes`,
       icon: Search,
       color: 'bg-blue-500',
     },
     {
       title: t('dashboard.quickActions.viewHistory'),
-      description: 'Voir votre historique de dons',
+      description: t('dashboard.quickActions.viewHistoryDesc'),
       href: `/${locale}/historique`,
       icon: History,
       color: 'bg-green-500',
@@ -104,7 +112,7 @@ export default function DashboardPage({ params: { locale } }: { params: { locale
               {t('dashboard.title')}
             </h1>
             <p className="text-gray-600 mt-2">
-              Bonjour {user?.name}, bienvenue sur votre tableau de bord
+              {t('dashboard.welcome', { name: user?.name || '' })}
             </p>
           </div>
 
@@ -220,7 +228,7 @@ export default function DashboardPage({ params: { locale } }: { params: { locale
               <div>
                 <CardTitle>{t('dashboard.recentRequests.title')}</CardTitle>
                 <CardDescription>
-                  Dernières demandes de sang dans votre région
+                  {t('dashboard.recentRequests.description')}
                 </CardDescription>
               </div>
               <Link href={`/${locale}/demandes`}>
@@ -250,15 +258,15 @@ export default function DashboardPage({ params: { locale } }: { params: { locale
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-900">
-                            {request.bloodType} • {request.medicalInfo?.hospitalName || 'Hôpital'}
+                            {request.bloodType} • {request.medicalInfo?.hospitalName || t('dashboard.recentRequests.hospital')}
                           </p>
                           <p className="text-sm text-gray-500">
-                            {request.description || 'Demande de sang urgente'}
+                            {request.description || t('dashboard.recentRequests.urgentRequest')}
                           </p>
                           <div className="flex items-center space-x-2 mt-1">
                             <MapPin className="h-3 w-3 text-gray-400" />
                             <span className="text-xs text-gray-500">
-                              {request.location.address || 'Localisation'}
+                              {request.location.address || t('dashboard.recentRequests.location')}
                             </span>
                           </div>
                         </div>
@@ -268,7 +276,7 @@ export default function DashboardPage({ params: { locale } }: { params: { locale
                           {t(`bloodRequests.urgency.${request.urgencyLevel}`)}
                         </span>
                         <p className="text-xs text-gray-500 mt-1">
-                          {new Date(request.createdAt).toLocaleDateString('fr-FR')}
+                          {new Date(request.createdAt).toLocaleDateString(locale === 'ar' ? 'ar' : 'fr-FR')}
                         </p>
                       </div>
                     </div>

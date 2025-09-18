@@ -34,15 +34,25 @@ import { fr, ar } from 'date-fns/locale';
 import apiService from '@/lib/api';
 import { BloodType, UserStats } from '@/types';
 
-const profileSchema = z.object({
-  name: z.string().min(2, 'Le nom doit contenir au moins 2 caractères'),
+// Define schema function to use t() for validation messages
+const createProfileSchema = (t: any) => z.object({
+  name: z.string().min(2, t('profile.personal.nameMinLength')),
   bloodType: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
   lastDonationDate: z.string().optional(),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
 
-export default function ProfilePage({ params: { locale } }: { params: { locale: string } }) {
+export default function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
+  const [locale, setLocale] = useState<string>('fr');
+
+  useEffect(() => {
+    const getLocale = async () => {
+      const resolvedParams = await params;
+      setLocale(resolvedParams.locale || 'fr');
+    };
+    getLocale();
+  }, [params]);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [stats, setStats] = useState<UserStats | null>(null);
@@ -53,7 +63,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
   const t = useTranslations();
 
   const form = useForm<ProfileFormData>({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(createProfileSchema(t)),
     defaultValues: {
       name: user?.name || '',
       bloodType: user?.bloodType || undefined,
@@ -64,9 +74,11 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
   const bloodTypes: BloodType[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   useEffect(() => {
-    loadUserStats();
-    loadEligibilityInfo();
-  }, []);
+    if (user) {
+      loadUserStats();
+      loadEligibilityInfo();
+    }
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -135,10 +147,10 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
         await refreshUser();
         setIsEditing(false);
       } else {
-        setError(response.message || 'Erreur lors de la mise à jour du profil');
+        setError(response.message || t('profile.personal.updateError'));
       }
     } catch (err: any) {
-      setError(err.message || 'Erreur réseau');
+      setError(err.message || t('profile.personal.networkError'));
     } finally {
       setIsSaving(false);
     }
@@ -165,7 +177,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
         locale: locale === 'ar' ? ar : fr
       });
     } catch {
-      return 'Date inconnue';
+      return t('profile.personal.unknownDate');
     }
   };
 
@@ -186,7 +198,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                   {t('profile.title')}
                 </h1>
                 <p className="text-gray-600 mt-1">
-                  Gérez vos informations personnelles et vos préférences
+                  {t('profile.subtitle')}
                 </p>
               </div>
             </div>
@@ -209,7 +221,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                   <div>
                     <CardTitle>{t('profile.personal.title')}</CardTitle>
                     <CardDescription>
-                      Informations de base sur votre profil de donneur
+                      {t('profile.personal.description')}
                     </CardDescription>
                   </div>
                   {!isEditing && (
@@ -251,7 +263,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                   <FormControl>
                                     <SelectTrigger>
-                                      <SelectValue placeholder="Sélectionner votre groupe sanguin" />
+                                      <SelectValue placeholder={t('profile.personal.selectBloodType')} />
                                     </SelectTrigger>
                                   </FormControl>
                                   <SelectContent>
@@ -305,7 +317,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                             {isSaving ? (
                               <>
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                                Enregistrement...
+                                {t('profile.personal.saving')}
                               </>
                             ) : (
                               <>
@@ -326,7 +338,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                             {t('profile.personal.name')}
                           </Label>
                           <div className="mt-1 text-lg font-medium text-gray-900">
-                            {user?.name || 'Non renseigné'}
+                            {user?.name || t('profile.personal.notProvided')}
                           </div>
                         </div>
 
@@ -353,19 +365,19 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                                 {user.bloodType}
                               </Badge>
                             ) : (
-                              <span className="text-gray-500">Non renseigné</span>
+                              <span className="text-gray-500">{t('profile.personal.notProvided')}</span>
                             )}
                           </div>
                         </div>
 
                         <div>
                           <Label className="text-sm font-medium text-gray-600">
-                            Membre depuis
+                            {t('profile.personal.memberSince')}
                           </Label>
                           <div className="mt-1 flex items-center space-x-2">
                             <Calendar className="h-4 w-4 text-gray-500" />
                             <span className="text-lg font-medium text-gray-900">
-                              {user?.joinDate ? formatJoinDate(user.joinDate) : 'Date inconnue'}
+                              {user?.joinDate ? formatJoinDate(user.joinDate) : t('profile.personal.unknownDate')}
                             </span>
                           </div>
                         </div>
@@ -381,11 +393,11 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                             <div className="flex items-center space-x-2">
                               <Heart className="h-4 w-4 text-red-500" />
                               <span className="text-lg font-medium text-gray-900">
-                                {new Date(user.lastDonationDate).toLocaleDateString('fr-FR')}
+                                {new Date(user.lastDonationDate).toLocaleDateString(locale === 'ar' ? 'ar-MR' : 'fr-FR')}
                               </span>
                             </div>
                           ) : (
-                            <span className="text-gray-500">Aucun don enregistré</span>
+                            <span className="text-gray-500">{t('profile.personal.noDonationRecorded')}</span>
                           )}
                         </div>
                       </div>
@@ -401,7 +413,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                                   {t('profile.personal.eligible')}
                                 </div>
                                 <div className="text-sm text-green-700">
-                                  Vous êtes éligible pour donner du sang
+                                  {t('profile.personal.eligibleMessage')}
                                 </div>
                               </div>
                             </>
@@ -414,8 +426,8 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                                 </div>
                                 <div className="text-sm text-red-700">
                                   {eligibilityInfo?.nextEligibleDate
-                                    ? `Prochaine éligibilité: ${new Date(eligibilityInfo.nextEligibleDate).toLocaleDateString('fr-FR')}`
-                                    : 'Contactez votre médecin pour plus d\'informations'
+                                    ? t('profile.personal.nextEligibleDate', { date: new Date(eligibilityInfo.nextEligibleDate).toLocaleDateString(locale === 'ar' ? 'ar-MR' : 'fr-FR') })
+                                    : t('profile.personal.contactDoctor')
                                   }
                                 </div>
                               </div>
@@ -494,7 +506,7 @@ export default function ProfilePage({ params: { locale } }: { params: { locale: 
                       </div>
                       <div className="ml-4">
                         <p className="text-sm font-medium text-gray-600">
-                          Réalisations
+                          {t('profile.stats.achievements')}
                         </p>
                         <p className="text-2xl font-bold text-gray-900">
                           {stats?.achievements?.length || 0}

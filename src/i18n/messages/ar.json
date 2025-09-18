@@ -99,11 +99,15 @@
   },
   "dashboard": {
     "title": "لوحة المعلومات",
+    "welcome": "مرحباً {name}، أهلاً بك في لوحة المعلومات",
     "quickActions": {
       "title": "إجراءات سريعة",
       "createRequest": "إنشاء طلب",
+      "createRequestDesc": "إنشاء طلب دم جديد",
       "findDonors": "العثور على متبرعين",
-      "viewHistory": "عرض التاريخ"
+      "findDonorsDesc": "العثور على متبرعين في المنطقة",
+      "viewHistory": "عرض التاريخ",
+      "viewHistoryDesc": "عرض تاريخ التبرعات الخاص بك"
     },
     "stats": {
       "totalDonations": "إجمالي التبرعات",
@@ -113,12 +117,21 @@
     },
     "recentRequests": {
       "title": "الطلبات الأخيرة",
+      "description": "أحدث طلبات الدم في منطقتك",
       "empty": "لا توجد طلبات حديثة",
-      "viewAll": "عرض الكل"
+      "viewAll": "عرض الكل",
+      "hospital": "المستشفى",
+      "urgentRequest": "طلب دم عاجل",
+      "location": "الموقع"
     }
   },
   "bloodRequests": {
     "title": "طلبات الدم",
+    "subtitle": "ابحث عن طلبات الدم في منطقتك واستجب لها",
+    "noRequestsFound": "لم يتم العثور على طلبات",
+    "noActiveRequests": "لا توجد طلبات دم نشطة في منطقتك",
+    "tryModifyFilters": "حاول تعديل مرشحات البحث",
+    "loadMore": "تحميل المزيد من الطلبات",
     "create": {
       "title": "إنشاء طلب",
       "subtitle": "أنشئ طلب دم لتلقي المساعدة من المتبرعين المتطوعين",
@@ -132,7 +145,51 @@
       "hospital": "المستشفى",
       "contactPhone": "هاتف الاتصال",
       "condition": "الحالة الطبية",
-      "submit": "إنشاء الطلب"
+      "submit": "إنشاء الطلب",
+      "selectBloodType": "اختر فصيلة الدم",
+      "descriptionPlaceholder": "اوصف الحالة ولماذا التبرع بالدم ضروري...",
+      "hospitalPlaceholder": "اسم المستشفى أو العيادة",
+      "phonePlaceholder": "+222 XX XX XX XX",
+      "conditionPlaceholder": "الحالة الطبية أو نوع التدخل",
+      "doctorLabel": "اسم الطبيب (اختياري)",
+      "optional": "اختياري",
+      "doctorPlaceholder": "د. اسم الطبيب المسؤول",
+      "locationError": "يرجى اختيار الموقع",
+      "createError": "خطأ في إنشاء الطلب",
+      "networkError": "خطأ في الشبكة أثناء إنشاء الطلب",
+      "validationErrors": {
+        "descriptionMin": "يجب أن يحتوي الوصف على 10 أحرف على الأقل",
+        "phoneInvalid": "رقم هاتف غير صحيح",
+        "hospitalRequired": "اسم المستشفى مطلوب"
+      },
+      "success": {
+        "title": "تم إنشاء الطلب بنجاح!",
+        "message": "تم نشر طلب الدم الخاص بك. سيتلقى المتبرعون في منطقتك إشعاراً.",
+        "viewAll": "عرض جميع الطلبات",
+        "backToDashboard": "العودة إلى لوحة المعلومات"
+      },
+      "tips": {
+        "title": "نصائح مهمة",
+        "realUrgency": {
+          "title": "الإلحاح الحقيقي",
+          "description": "لا تنشئ طلباً عاجلاً إلا في الحالات الحرجة التي تتطلب تبرعاً فورياً."
+        },
+        "accurateInfo": {
+          "title": "معلومات دقيقة",
+          "description": "قدم معلومات واضحة وكاملة لتسهيل استجابة المتبرعين."
+        },
+        "exactLocation": {
+          "title": "الموقع الدقيق",
+          "description": "حدد الموقع الدقيق للمستشفى حتى يتمكن المتبرعون من العثور عليك بسهولة."
+        }
+      },
+      "compatibility": {
+        "title": "فصائل الدم المتوافقة",
+        "oNegative": "متبرع عام",
+        "abPositive": "مستقبل عام",
+        "aPositive": "يمكن أن يستقبل A+, A-, O+, O-",
+        "bPositive": "يمكن أن يستقبل B+, B-, O+, O-"
+      }
     },
     "filters": {
       "all": "الكل",
@@ -164,16 +221,29 @@
   },
   "profile": {
     "title": "الملف الشخصي",
+    "subtitle": "إدارة معلوماتك الشخصية وتفضيلاتك",
     "personal": {
       "title": "المعلومات الشخصية",
+      "description": "معلومات أساسية حول ملف المتبرع الخاص بك",
       "name": "الاسم",
       "phone": "الهاتف",
       "bloodType": "فصيلة الدم",
       "lastDonation": "آخر تبرع",
+      "memberSince": "عضو منذ",
       "eligibility": "الأهلية",
       "eligible": "مؤهل",
+      "eligibleMessage": "أنت مؤهل للتبرع بالدم",
       "notEligible": "غير مؤهل",
-      "nextEligible": "التأهيل القادم"
+      "nextEligibleDate": "الأهلية القادمة: {date}",
+      "contactDoctor": "اتصل بطبيبك لمزيد من المعلومات",
+      "notProvided": "غير محدد",
+      "unknownDate": "تاريخ غير معروف",
+      "noDonationRecorded": "لا يوجد تبرع مسجل",
+      "selectBloodType": "اختر فصيلة دمك",
+      "saving": "جاري الحفظ...",
+      "updateError": "خطأ في تحديث الملف الشخصي",
+      "networkError": "خطأ في الشبكة",
+      "nameMinLength": "يجب أن يحتوي الاسم على حرفين على الأقل"
     },
     "stats": {
       "title": "الإحصائيات",
@@ -187,10 +257,77 @@
       "save": "حفظ التغييرات"
     }
   },
+  "history": {
+    "title": "التاريخ",
+    "subtitle": "تاريخ تبرعاتك وطلبات الدم الخاصة بك",
+    "export": "تصدير",
+    "refreshing": "جاري التحديث...",
+    "loadingError": "خطأ في تحميل التاريخ",
+    "networkError": "خطأ في الشبكة",
+    "tabs": {
+      "all": "الكل",
+      "confirmed": "مؤكد",
+      "pending": "قيد الانتظار"
+    },
+    "status": {
+      "confirmed": "مؤكد",
+      "pending": "قيد الانتظار",
+      "disputed": "محل نزاع",
+      "cancelled": "ملغي"
+    },
+    "stats": {
+      "totalDonations": "إجمالي التبرعات",
+      "thisYear": "هذا العام",
+      "averageRating": "التقييم المتوسط"
+    },
+    "donation": {
+      "bloodDonation": "تبرع بالدم",
+      "requester": "طالب",
+      "donor": "متبرع",
+      "anonymous": "مجهول",
+      "notes": "ملاحظات",
+      "confirmationRequired": "التأكيد مطلوب قبل"
+    },
+    "empty": {
+      "noHistory": "لا يوجد تاريخ تبرع",
+      "noConfirmed": "لا توجد تبرعات مؤكدة",
+      "noPending": "لا توجد تبرعات قيد الانتظار",
+      "startDonating": "ابدأ بالرد على طلب دم لرؤية تاريخك هنا.",
+      "changeFilter": "قم بتغيير المرشح لرؤية أنواع أخرى من التبرعات.",
+      "viewAllDonations": "عرض جميع التبرعات"
+    },
+    "error": {
+      "title": "خطأ في التحميل",
+      "retry": "إعادة المحاولة"
+    }
+  },
   "notifications": {
     "title": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
     "empty": "لا توجد إشعارات",
+    "unreadCount": {
+      "single": "{count} إشعار غير مقروء",
+      "plural": "{count} إشعارات غير مقروءة",
+      "allRead": "جميع الإشعارات مقروءة"
+    },
+    "actions": {
+      "refreshing": "جاري التحديث...",
+      "marking": "جاري التحديد...",
+      "loadMore": "تحميل مزيد من الإشعارات",
+      "viewRequest": "عرض الطلب",
+      "configure": "إعداد الإشعارات",
+      "new": "جديد"
+    },
+    "error": {
+      "title": "خطأ في التحميل",
+      "loadingError": "خطأ في تحميل الإشعارات",
+      "networkError": "خطأ في الشبكة",
+      "retry": "إعادة المحاولة"
+    },
+    "empty": {
+      "title": "لا توجد إشعارات",
+      "description": "ستتلقى إشعارات عندما يرد المتبرعون على طلباتك أو عند إنشاء طلبات جديدة في منطقتك."
+    },
     "types": {
       "blood_request_created": "طلب دم جديد",
       "blood_request_response": "رد على طلبك",
@@ -202,23 +339,60 @@
   },
   "settings": {
     "title": "الإعدادات",
+    "subtitle": "خصص تجربتك وإدارة تفضيلاتك",
     "language": {
       "title": "اللغة",
       "french": "Français",
-      "arabic": "العربية"
+      "arabic": "العربية",
+      "description": "اختر لغتك المفضلة للواجهة",
+      "primaryLanguage": "اللغة الرئيسية",
+      "secondaryLanguage": "اللغة الثانوية",
+      "supportInfo": "يدعم التطبيق الفرنسية والعربية مع دعم كامل للكتابة من اليمين إلى اليسار للعربية."
     },
     "notifications": {
       "title": "الإشعارات",
+      "preferencesTitle": "تفضيلات الإشعارات",
+      "preferencesDescription": "اختر أنواع الإشعارات التي تريد تلقيها",
       "bloodRequests": "طلبات الدم",
+      "bloodRequestsDesc": "طلبات دم جديدة في منطقتك",
       "eligibilityReminders": "تذكيرات الأهلية",
+      "eligibilityRemindersDesc": "تذكيرات عندما تصبح مؤهلاً مرة أخرى للتبرع",
       "donationConfirmations": "تأكيدات التبرع",
+      "donationConfirmationsDesc": "تأكيدات وتحديثات حول تبرعاتك",
+      "audioSettings": "إعدادات الصوت",
       "sound": "الصوت",
+      "soundDesc": "أصوات للإشعارات المهمة",
+      "testSound": "اختبار",
       "vibration": "الاهتزاز",
-      "maxDistance": "المسافة القصوى (كم)"
+      "vibrationDesc": "اهتزازات للإشعارات",
+      "locationSettings": "إعدادات الموقع والتوقيت",
+      "maxDistance": "المسافة القصوى (كم)",
+      "maxDistanceDesc": "الحد الأقصى للمسافة لتلقي إشعارات الطلبات",
+      "nightModeStart": "الوضع الصامت - البداية",
+      "nightModeEnd": "الوضع الصامت - النهاية",
+      "nightModeDesc": "لا إشعارات صوتية خلال هذه الساعات",
+      "saveSuccess": "تم حفظ التفضيلات بنجاح",
+      "saveError": "خطأ في الحفظ",
+      "networkError": "خطأ في الشبكة",
+      "saving": "جاري الحفظ..."
     },
     "privacy": {
       "title": "الخصوصية",
-      "deleteAccount": "حذف الحساب"
+      "description": "إدارة بياناتك الشخصية والخصوصية",
+      "accountInfo": "معلومات الحساب",
+      "dataManagement": "إدارة البيانات",
+      "exportData": "تصدير بياناتي",
+      "exportDataDesc": "تحميل نسخة من جميع بياناتك",
+      "export": "تصدير",
+      "deleteAccount": "حذف الحساب",
+      "deleteAccountDesc": "حذف حسابك وجميع بياناتك نهائياً",
+      "delete": "حذف",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "bloodType": "فصيلة الدم",
+      "memberSince": "عضو منذ",
+      "notProvided": "غير محدد",
+      "unknownDate": "تاريخ غير معروف"
     }
   },
   "bloodTypes": {
@@ -230,6 +404,21 @@
     "AB-": "AB-",
     "O+": "O+",
     "O-": "O-"
+  },
+  "locationPicker": {
+    "label": "العنوان أو الموقع",
+    "placeholder": "أدخل عنوان المستشفى أو المكان",
+    "or": "أو",
+    "useCurrentLocation": "استخدام موقعي الحالي",
+    "positionSelected": "تم اختيار الموقع",
+    "coordinates": "الإحداثيات",
+    "errors": {
+      "geolocationNotSupported": "تحديد الموقع الجغرافي غير مدعوم من قبل هذا المتصفح",
+      "positionUnavailable": "تعذر الحصول على موقعك. يرجى إدخال العنوان يدوياً.",
+      "addressNotFound": "لم يتم العثور على العنوان. يرجى التحقق من العنوان المدخل.",
+      "geocodingServiceUnavailable": "خدمة تحديد الموقع غير متاحة",
+      "geocodingError": "خطأ في البحث عن العنوان. يرجى المحاولة مرة أخرى."
+    }
   },
   "errors": {
     "title": "حدث خطأ",
