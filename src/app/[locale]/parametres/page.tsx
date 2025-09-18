@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
@@ -27,7 +28,9 @@ import {
 import apiService from '@/lib/api';
 import { NotificationPreferences } from '@/types';
 
-export default function SettingsPage({ params: { locale } }: { params: { locale: string } }) {
+export default function SettingsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = React.use(params);
+
   const [notificationPrefs, setNotificationPrefs] = useState<NotificationPreferences>({
     bloodRequests: true,
     eligibilityReminders: true,
