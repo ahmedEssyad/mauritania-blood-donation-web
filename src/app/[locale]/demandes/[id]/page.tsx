@@ -74,7 +74,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
       if (requestResponse.success) {
         setRequest(requestResponse.data);
       } else {
-        setError('Demande non trouvée');
+        setError(t('bloodRequests.details.notFound'));
       }
 
       if (responsesResponse.success) {
@@ -82,7 +82,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
       }
     } catch (err: any) {
       console.error('Failed to load request details:', err);
-      setError(err.message || 'Erreur lors du chargement');
+      setError(err.message || t('bloodRequests.details.loadingError'));
     } finally {
       setLoading(false);
     }
@@ -172,12 +172,12 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
             <div className="text-center py-12">
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">
-                {error || 'Demande non trouvée'}
+                {error || t('bloodRequests.details.notFound')}
               </h3>
               <Link href={`/${locale}/demandes`}>
                 <Button variant="outline">
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Retour aux demandes
+                  {t('bloodRequests.details.backToRequests')}
                 </Button>
               </Link>
             </div>
@@ -213,7 +213,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
               className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
-              Retour aux demandes
+              {t('bloodRequests.details.backToRequests')}
             </Link>
 
             <div className="flex items-center space-x-3">
@@ -254,7 +254,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                 <CardContent className="space-y-6">
                   {/* Description */}
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-2">Description</h3>
+                    <h3 className="font-medium text-gray-900 mb-2">{t('bloodRequests.details.description')}</h3>
                     <p className="text-gray-700 leading-relaxed">
                       {request.description}
                     </p>
@@ -265,22 +265,22 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                       <h3 className="font-medium text-blue-900 mb-3 flex items-center">
                         <Hospital className="h-4 w-4 mr-2" />
-                        Informations médicales
+                        {t('bloodRequests.details.medicalInfo')}
                       </h3>
                       <div className="space-y-2 text-sm">
                         {request.medicalInfo.hospitalName && (
                           <div>
-                            <strong>Hôpital:</strong> {request.medicalInfo.hospitalName}
+                            <strong>{t('bloodRequests.details.hospital')}:</strong> {request.medicalInfo.hospitalName}
                           </div>
                         )}
                         {request.medicalInfo.condition && (
                           <div>
-                            <strong>Condition:</strong> {request.medicalInfo.condition}
+                            <strong>{t('bloodRequests.details.condition')}:</strong> {request.medicalInfo.condition}
                           </div>
                         )}
                         {request.medicalInfo.doctorName && (
                           <div>
-                            <strong>Médecin:</strong> {request.medicalInfo.doctorName}
+                            <strong>{t('bloodRequests.details.doctor')}:</strong> {request.medicalInfo.doctorName}
                           </div>
                         )}
                       </div>
@@ -293,7 +293,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                       <div className="flex items-start space-x-2">
                         <MapPin className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                         <div>
-                          <div className="font-medium text-gray-900">Localisation</div>
+                          <div className="font-medium text-gray-900">{t('bloodRequests.details.location')}</div>
                           <div className="text-sm text-gray-600">{request.location.address}</div>
                         </div>
                       </div>
@@ -303,7 +303,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                       <div className="flex items-start space-x-2">
                         <Phone className="h-5 w-5 text-gray-400 mt-0.5 flex-shrink-0" />
                         <div>
-                          <div className="font-medium text-gray-900">Contact</div>
+                          <div className="font-medium text-gray-900">{t('bloodRequests.details.contact')}</div>
                           <div className="text-sm text-gray-600">{request.contactPhone}</div>
                         </div>
                       </div>
@@ -316,7 +316,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                       {hasResponded ? (
                         <div className="flex items-center space-x-2 text-green-600">
                           <Heart className="h-4 w-4" />
-                          <span className="text-sm font-medium">Vous avez déjà répondu à cette demande</span>
+                          <span className="text-sm font-medium">{t('bloodRequests.details.alreadyResponded')}</span>
                         </div>
                       ) : (
                         <Dialog open={isRespondModalOpen} onOpenChange={setIsRespondModalOpen}>
@@ -328,19 +328,19 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                           </DialogTrigger>
                           <DialogContent>
                             <DialogHeader>
-                              <DialogTitle>Répondre à la demande</DialogTitle>
+                              <DialogTitle>{t('bloodRequests.details.respondToRequest')}</DialogTitle>
                               <DialogDescription>
-                                Envoyez un message pour indiquer votre disponibilité pour donner du sang.
+                                {t('bloodRequests.details.respondDescription')}
                               </DialogDescription>
                             </DialogHeader>
                             <div className="space-y-4">
                               <div>
-                                <Label htmlFor="message">Message (optionnel)</Label>
+                                <Label htmlFor="message">{t('bloodRequests.details.messageLabel')}</Label>
                                 <textarea
                                   id="message"
                                   rows={3}
                                   className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 mt-2"
-                                  placeholder="Je suis disponible pour donner du sang. Contactez-moi au..."
+                                  placeholder={t('bloodRequests.details.messagePlaceholder')}
                                   value={responseMessage}
                                   onChange={(e) => setResponseMessage(e.target.value)}
                                 />
@@ -350,7 +350,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                                   variant="outline"
                                   onClick={() => setIsRespondModalOpen(false)}
                                 >
-                                  Annuler
+                                  {t('bloodRequests.details.cancel')}
                                 </Button>
                                 <Button
                                   onClick={handleRespond}
@@ -360,12 +360,12 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                                   {isSubmittingResponse ? (
                                     <>
                                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                                      Envoi...
+                                      {t('bloodRequests.details.sending')}
                                     </>
                                   ) : (
                                     <>
                                       <Send className="h-4 w-4 mr-2" />
-                                      Envoyer la réponse
+                                      {t('bloodRequests.details.sendResponse')}
                                     </>
                                   )}
                                 </Button>
@@ -385,7 +385,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                   <CardTitle className="flex items-center space-x-2">
                     <Users className="h-5 w-5" />
                     <span>
-                      Réponses ({responses.length})
+                      {t('bloodRequests.details.responses', { count: responses.length })}
                     </span>
                   </CardTitle>
                 </CardHeader>
@@ -406,14 +406,14 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                             <div className="flex-1">
                               <div className="flex items-center space-x-2">
                                 <span className="font-medium text-gray-900">
-                                  {response.donor?.name || 'Donneur anonyme'}
+                                  {response.donor?.name || t('bloodRequests.details.anonymousDonor')}
                                 </span>
                                 <Badge variant="outline">
                                   {response.donor?.bloodType}
                                 </Badge>
                                 {response.isSelected && (
                                   <Badge className="bg-green-100 text-green-800">
-                                    Sélectionné
+                                    {t('bloodRequests.details.selected')}
                                   </Badge>
                                 )}
                               </div>
@@ -436,7 +436,7 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                   ) : (
                     <div className="text-center py-8">
                       <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                      <p className="text-gray-500">Aucune réponse pour le moment</p>
+                      <p className="text-gray-500">{t('bloodRequests.details.noResponses')}</p>
                     </div>
                   )}
                 </CardContent>
@@ -450,16 +450,16 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                 <CardHeader>
                   <CardTitle className="text-sm flex items-center space-x-2">
                     <Clock className="h-4 w-4" />
-                    <span>Informations temporelles</span>
+                    <span>{t('bloodRequests.details.timeInfo')}</span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm">
                   <div>
-                    <div className="font-medium text-gray-900">Créée</div>
+                    <div className="font-medium text-gray-900">{t('bloodRequests.details.created')}</div>
                     <div className="text-gray-600">{timeAgo}</div>
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">Expire</div>
+                    <div className="font-medium text-gray-900">{t('bloodRequests.details.expires')}</div>
                     <div className="text-gray-600">{expiresIn}</div>
                   </div>
                 </CardContent>
@@ -471,12 +471,12 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
                   <CardHeader>
                     <CardTitle className="text-sm text-red-800 flex items-center space-x-2">
                       <AlertCircle className="h-4 w-4" />
-                      <span>Demande urgente</span>
+                      <span>{t('bloodRequests.details.urgentRequest')}</span>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-red-700">
-                      Cette demande nécessite une réponse immédiate. Si vous êtes compatible et disponible, veuillez répondre rapidement.
+                      {t('bloodRequests.details.urgentDescription')}
                     </p>
                   </CardContent>
                 </Card>
@@ -485,17 +485,17 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
               {/* Compatibility Info */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-sm">Compatibilité sanguine</CardTitle>
+                  <CardTitle className="text-sm">{t('bloodRequests.details.compatibility')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-sm space-y-2">
                     <div className="font-medium">
-                      Type recherché: <Badge className={getBloodTypeColor(request.bloodType)}>
+                      {t('bloodRequests.details.typeNeeded')}: <Badge className={getBloodTypeColor(request.bloodType)}>
                         {request.bloodType}
                       </Badge>
                     </div>
                     <div className="text-gray-600">
-                      Les donneurs compatibles peuvent avoir les groupes sanguins correspondant à ce type.
+                      {t('bloodRequests.details.compatibilityDescription')}
                     </div>
                   </div>
                 </CardContent>
