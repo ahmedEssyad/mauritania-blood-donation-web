@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import React from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
@@ -39,7 +40,8 @@ import { fr, ar } from 'date-fns/locale';
 import apiService from '@/lib/api';
 import { BloodRequest, BloodRequestResponse, UrgencyLevel } from '@/types';
 
-export default function BloodRequestDetailsPage({ params: { locale } }: { params: { locale: string } }) {
+export default function BloodRequestDetailsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = React.use(params);
   const [request, setRequest] = useState<BloodRequest | null>(null);
   const [responses, setResponses] = useState<BloodRequestResponse[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,12 +50,12 @@ export default function BloodRequestDetailsPage({ params: { locale } }: { params
   const [responseMessage, setResponseMessage] = useState('');
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
 
-  const params = useParams();
+  const urlParams = useParams();
   const router = useRouter();
   const { user } = useAuth();
   const t = useTranslations();
 
-  const requestId = params.id as string;
+  const requestId = urlParams.id as string;
 
   useEffect(() => {
     if (requestId) {

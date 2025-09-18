@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/contexts/AuthContext';
 import { useForm } from 'react-hook-form';
@@ -44,15 +45,7 @@ const createProfileSchema = (t: any) => z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
-  const [locale, setLocale] = useState<string>('fr');
-
-  useEffect(() => {
-    const getLocale = async () => {
-      const resolvedParams = await params;
-      setLocale(resolvedParams.locale || 'fr');
-    };
-    getLocale();
-  }, [params]);
+  const { locale } = React.use(params);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [stats, setStats] = useState<UserStats | null>(null);

@@ -139,9 +139,6 @@ export default function BloodRequestsPage() {
     setFilters(newFilters);
   };
 
-  const handleSearch = (query: string) => {
-    setFilters(prev => ({ ...prev, search: query }));
-  };
 
   const handleRespond = async (requestId: string) => {
     try {
@@ -197,7 +194,6 @@ export default function BloodRequestsPage() {
             <FilterBar
               filters={filters}
               onFiltersChange={handleFiltersChange}
-              onSearch={handleSearch}
               activeCount={filteredRequests.length}
             />
           </div>

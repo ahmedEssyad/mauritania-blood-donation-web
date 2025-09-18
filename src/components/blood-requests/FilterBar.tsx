@@ -35,14 +35,12 @@ interface FilterState {
 interface FilterBarProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
-  onSearch: (query: string) => void;
   activeCount?: number;
 }
 
 export default function FilterBar({
   filters,
   onFiltersChange,
-  onSearch,
   activeCount = 0
 }: FilterBarProps) {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -83,10 +81,7 @@ export default function FilterBar({
         <Input
           placeholder={t('common.search')}
           value={filters.search}
-          onChange={(e) => {
-            handleFilterChange('search', e.target.value);
-            onSearch(e.target.value);
-          }}
+          onChange={(e) => handleFilterChange('search', e.target.value)}
           className="pl-10 pr-4"
         />
       </div>

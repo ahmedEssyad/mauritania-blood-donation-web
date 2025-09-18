@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useForm } from 'react-hook-form';
@@ -40,7 +41,8 @@ const createRequestSchemaFactory = (t: any) => z.object({
 
 type CreateRequestFormData = z.infer<ReturnType<typeof createRequestSchemaFactory>>;
 
-export default function CreateRequestPage({ params: { locale } }: { params: { locale: string } }) {
+export default function CreateRequestPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = React.use(params);
   const [location, setLocation] = useState<{ lat: number; lng: number; address: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslations } from 'next-intl';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Navbar from '@/components/Navbar';
@@ -26,7 +27,8 @@ import { fr, ar } from 'date-fns/locale';
 import apiService from '@/lib/api';
 import { DonationRecord } from '@/types';
 
-export default function DonationHistoryPage({ params: { locale } }: { params: { locale: string } }) {
+export default function DonationHistoryPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = React.use(params);
   const [donations, setDonations] = useState<DonationRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
