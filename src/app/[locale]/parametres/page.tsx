@@ -125,7 +125,11 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
         // Redirect to landing page with success message
         router.push(`/${locale}?deleted=true`);
       } else {
-        throw new Error(response.message || 'Failed to delete account');
+        // Don't throw here, just handle the API response directly
+        const apiErrorMessage = response.message || 'Failed to delete account';
+        console.error('Delete account API error:', apiErrorMessage);
+        setError(apiErrorMessage);
+        setShowDeleteConfirm(false);
       }
     } catch (error: any) {
       console.error('Delete account error:', error);
