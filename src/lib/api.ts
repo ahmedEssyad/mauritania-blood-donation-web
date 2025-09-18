@@ -160,8 +160,21 @@ class ApiService {
 
   // User endpoints
   async getProfile(): Promise<ApiResponse> {
-    const response = await this.client.get('/user/profile');
-    return response.data;
+    try {
+      const response = await this.client.get('/user/profile');
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 429) {
+        // Handle rate limiting - return a response that indicates rate limiting
+        console.warn('Rate limit exceeded for profile - auth will use cached data');
+        return {
+          success: false,
+          message: 'Too many requests. Using cached profile data.',
+          code: 'RATE_LIMITED'
+        };
+      }
+      throw error;
+    }
   }
 
   async updateProfile(data: {

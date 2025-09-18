@@ -71,6 +71,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(userData);
           setIsAuthenticated(true);
           localStorage.setItem('user', JSON.stringify(userData));
+        } else if (response.code === 'RATE_LIMITED') {
+          // Handle rate limiting - keep existing auth state with cached data
+          console.warn('Profile API rate limited - keeping cached user data');
+          // Don't update anything, keep existing auth state
         } else {
           throw new Error('Failed to get profile');
         }
@@ -159,6 +163,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(userData);
         setIsAuthenticated(true);
         localStorage.setItem('user', JSON.stringify(userData));
+      } else if (response.code === 'RATE_LIMITED') {
+        // Handle rate limiting - keep existing auth state
+        console.warn('Refresh user API rate limited - keeping current state');
+        // Don't clear anything, just keep current state
+        return;
       } else {
         // Token might be expired, clear everything
         localStorage.removeItem('accessToken');
