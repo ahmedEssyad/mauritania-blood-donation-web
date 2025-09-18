@@ -100,7 +100,7 @@ export default function BloodRequestsPage() {
 
   // Debounced search function
   const debouncedSearch = useCallback(
-    debounce((searchTerm: string, allRequests: BloodRequest[]) => {
+    debounce((searchTerm: string, allRequests: BloodRequest[], sortBy: string) => {
       let filtered = [...allRequests];
 
       if (searchTerm) {
@@ -114,20 +114,20 @@ export default function BloodRequestsPage() {
       }
 
       // Apply sorting
-      filtered = sortRequests(filtered, filters.sortBy);
+      filtered = sortRequests(filtered, sortBy);
       setFilteredRequests(filtered);
     }, 300),
-    [sortRequests, filters.sortBy]
+    [sortRequests]
   );
 
   // Filter and sort requests
   useEffect(() => {
     if (requests.length > 0) {
-      debouncedSearch(filters.search, requests);
+      debouncedSearch(filters.search, requests, filters.sortBy);
     } else {
       setFilteredRequests([]);
     }
-  }, [requests, filters.search, debouncedSearch]);
+  }, [requests, filters.search, filters.sortBy, debouncedSearch]);
 
   const handleFiltersChange = (newFilters: FilterState) => {
     setFilters(newFilters);
