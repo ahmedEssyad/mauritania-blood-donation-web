@@ -416,31 +416,6 @@ class ApiService {
     return response.data;
   }
 
-  // User account deletion
-  async deleteAccount(): Promise<ApiResponse> {
-    try {
-      const response = await this.client.delete('/user/account');
-      return response.data;
-    } catch (error: any) {
-      console.error('Delete account API error:', error);
-      if (error.response?.status === 400) {
-        // Handle specific 400 error - might be business logic error
-        return {
-          success: false,
-          message: error.response?.data?.message || 'Cannot delete account at this time. You may have active blood requests or donations pending.',
-          code: 'DELETE_ACCOUNT_ERROR'
-        };
-      } else if (error.response?.status === 404) {
-        // Endpoint doesn't exist yet
-        return {
-          success: false,
-          message: 'Account deletion feature is not available yet.',
-          code: 'FEATURE_NOT_AVAILABLE'
-        };
-      }
-      throw error;
-    }
-  }
 }
 
 export default new ApiService();

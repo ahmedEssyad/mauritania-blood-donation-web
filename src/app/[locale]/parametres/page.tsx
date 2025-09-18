@@ -22,7 +22,6 @@ import {
   Smartphone,
   MapPin,
   Save,
-  Trash2,
   LogOut
 } from 'lucide-react';
 import apiService from '@/lib/api';
@@ -43,8 +42,6 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const { user, logout } = useAuth();
   const router = useRouter();
@@ -101,48 +98,6 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
     router.push(`/${locale}`);
   };
 
-  const handleDeleteAccount = async () => {
-    if (!showDeleteConfirm) {
-      setShowDeleteConfirm(true);
-      // Auto-reset after 10 seconds if user doesn't confirm
-      setTimeout(() => {
-        setShowDeleteConfirm(false);
-      }, 10000);
-      return;
-    }
-
-    setIsDeleting(true);
-    setError(null);
-
-    try {
-      const response = await apiService.deleteAccount();
-
-      if (response.success) {
-        // Clear all local storage
-        localStorage.clear();
-        sessionStorage.clear();
-
-        // Redirect to landing page with success message
-        router.push(`/${locale}?deleted=true`);
-      } else {
-        // Don't throw here, just handle the API response directly
-        const apiErrorMessage = response.message || 'Failed to delete account';
-        console.error('Delete account API error:', apiErrorMessage);
-        setError(apiErrorMessage);
-        setShowDeleteConfirm(false);
-      }
-    } catch (error: any) {
-      console.error('Delete account error:', error);
-      // Show user-friendly error message based on the response
-      const errorMessage = error.response?.data?.message ||
-                          error.message ||
-                          (locale === 'ar' ? 'حدث خطأ أثناء حذف الحساب' : 'Une erreur est survenue lors de la suppression du compte');
-      setError(errorMessage);
-      setShowDeleteConfirm(false);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   // Test notification sound
   const testNotificationSound = () => {
@@ -487,39 +442,6 @@ export default function SettingsPage({ params: { locale } }: { params: { locale:
                       </Button>
                     </div>
 
-                    <div className="flex items-center justify-between p-4 border border-red-200 rounded-lg">
-                      <div>
-                        <div className="font-medium text-red-900">
-                          {t('settings.privacy.deleteAccount')}
-                        </div>
-                        <div className="text-sm text-red-600">
-                          {t('settings.privacy.deleteAccountDesc')}
-                        </div>
-                        {showDeleteConfirm && (
-                          <div className="text-sm text-red-700 mt-2 font-medium">
-                            {locale === 'ar'
-                              ? 'انقر مرة أخرى للتأكيد - هذا الإجراء لا يمكن التراجع عنه!'
-                              : 'Cliquez encore pour confirmer - cette action est irréversible !'
-                            }
-                          </div>
-                        )}
-                      </div>
-                      <Button
-                        variant="destructive"
-                        onClick={handleDeleteAccount}
-                        disabled={isDeleting}
-                        className={showDeleteConfirm ? 'bg-red-600 hover:bg-red-700' : ''}
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        {isDeleting ? (
-                          locale === 'ar' ? 'جاري الحذف...' : 'Suppression...'
-                        ) : showDeleteConfirm ? (
-                          locale === 'ar' ? 'تأكيد الحذف' : 'Confirmer suppression'
-                        ) : (
-                          t('settings.privacy.delete')
-                        )}
-                      </Button>
-                    </div>
                   </div>
 
                   {/* Logout */}
