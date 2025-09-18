@@ -33,10 +33,6 @@ export default function DashboardPage() {
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'fr'; // Extract locale from pathname
 
-  // Temporary debugging
-  console.log('🔍 Dashboard Debug - Pathname:', pathname);
-  console.log('🔍 Dashboard Debug - Locale:', locale);
-  console.log('🔍 Dashboard Debug - Dashboard title translation:', t('dashboard.title'));
 
   useEffect(() => {
     loadDashboardData();

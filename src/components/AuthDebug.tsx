@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export function AuthDebug() {
   const { user, loading, isAuthenticated, refreshUser } = useAuth();
 
+  // Only show in development mode
   if (process.env.NODE_ENV !== 'development') return null;
 
   const storedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
@@ -24,7 +25,7 @@ export function AuthDebug() {
       )}
       {user && (
         <div className="text-green-300 text-xs mt-1">
-          ID: {user.id}<br/>
+          ID: {user._id}<br/>
           Phone: {user.phone}<br/>
           Name: {user.name || 'No name'}
         </div>
