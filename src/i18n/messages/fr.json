@@ -234,15 +234,23 @@
     },
     "urgency": {
       "low": "Faible",
+      "LOW": "Faible",
       "medium": "Moyenne",
+      "MEDIUM": "Moyenne",
       "high": "Élevée",
-      "urgent": "Urgente"
+      "HIGH": "Élevée",
+      "urgent": "Urgente",
+      "URGENT": "Urgente"
     },
     "status": {
       "active": "Active",
+      "ACTIVE": "Active",
       "fulfilled": "Satisfaite",
+      "FULFILLED": "Satisfaite",
       "cancelled": "Annulée",
-      "expired": "Expirée"
+      "CANCELLED": "Annulée",
+      "expired": "Expirée",
+      "EXPIRED": "Expirée"
     },
     "details": {
       "title": "Détails de la demande",

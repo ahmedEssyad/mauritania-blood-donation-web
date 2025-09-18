@@ -344,8 +344,21 @@ class ApiService {
   }
 
   async getBloodRequestResponses(requestId: string): Promise<ApiResponse> {
-    const response = await this.client.get(`/blood-requests/${requestId}/responses`);
-    return response.data;
+    try {
+      const response = await this.client.get(`/blood-requests/${requestId}/responses`);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // Return mock data if endpoint doesn't exist yet
+        return {
+          success: true,
+          data: {
+            responses: []
+          }
+        };
+      }
+      throw error;
+    }
   }
 
   async confirmDonor(requestId: string, responseId: string): Promise<ApiResponse> {

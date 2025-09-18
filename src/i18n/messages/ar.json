@@ -234,15 +234,23 @@
     },
     "urgency": {
       "low": "منخفض",
+      "LOW": "منخفض",
       "medium": "متوسط",
+      "MEDIUM": "متوسط",
       "high": "عالي",
-      "urgent": "عاجل"
+      "HIGH": "عالي",
+      "urgent": "عاجل",
+      "URGENT": "عاجل"
     },
     "status": {
       "active": "نشط",
+      "ACTIVE": "نشط",
       "fulfilled": "مكتمل",
+      "FULFILLED": "مكتمل",
       "cancelled": "ملغي",
-      "expired": "منتهي الصلاحية"
+      "CANCELLED": "ملغي",
+      "expired": "منتهي الصلاحية",
+      "EXPIRED": "منتهي الصلاحية"
     },
     "details": {
       "title": "تفاصيل الطلب",
