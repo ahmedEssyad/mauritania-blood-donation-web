@@ -243,6 +243,20 @@ class ApiService {
             totalResponses: 0
           }
         };
+      } else if (error.response?.status === 429) {
+        // Handle rate limiting - return empty stats with message
+        console.warn('Rate limit exceeded for user stats');
+        return {
+          success: true,
+          data: {
+            totalDonations: 0,
+            thisYearDonations: 0,
+            avgRating: 0,
+            totalResponses: 0,
+            rateLimited: true
+          },
+          message: 'Too many requests. Please try again later.'
+        };
       }
       throw error;
     }
@@ -265,6 +279,21 @@ class ApiService {
             limit: 10,
             totalPages: 0
           }
+        };
+      } else if (error.response?.status === 429) {
+        // Handle rate limiting - return empty data with message
+        console.warn('Rate limit exceeded for blood requests');
+        return {
+          success: true,
+          data: {
+            requests: [],
+            total: 0,
+            page: 1,
+            limit: 10,
+            totalPages: 0,
+            rateLimited: true
+          },
+          message: 'Too many requests. Please try again later.'
         };
       }
       throw error;

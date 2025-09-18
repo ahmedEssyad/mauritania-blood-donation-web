@@ -51,9 +51,17 @@ export default function DashboardPage() {
 
       if (requestsResponse.success) {
         setRecentRequests(requestsResponse.data.requests || []);
+        // Handle rate limiting gracefully
+        if (requestsResponse.data.rateLimited) {
+          console.warn('Blood requests rate limited - showing empty state');
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to load dashboard data:', error);
+      // Handle rate limiting and other API errors gracefully
+      if (error.response?.status === 429) {
+        console.warn('Dashboard data rate limited - user can still access other features');
+      }
     } finally {
       setLoading(false);
     }
