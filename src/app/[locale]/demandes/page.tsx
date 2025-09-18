@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -98,26 +98,32 @@ export default function BloodRequestsPage() {
     });
   }, []);
 
-  // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce((searchTerm: string, allRequests: BloodRequest[], sortBy: string) => {
-      let filtered = [...allRequests];
+  // Filter and search function
+  const filterAndSearchRequests = useCallback((allRequests: BloodRequest[], searchTerm: string, sortBy: string) => {
+    let filtered = [...allRequests];
 
-      if (searchTerm) {
-        const searchLower = searchTerm.toLowerCase();
-        filtered = filtered.filter(request =>
-          request.description?.toLowerCase().includes(searchLower) ||
-          request.medicalInfo?.hospitalName?.toLowerCase().includes(searchLower) ||
-          request.location.address?.toLowerCase().includes(searchLower) ||
-          request.bloodType.toLowerCase().includes(searchLower)
-        );
-      }
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(request =>
+        request.description?.toLowerCase().includes(searchLower) ||
+        request.medicalInfo?.hospitalName?.toLowerCase().includes(searchLower) ||
+        request.location.address?.toLowerCase().includes(searchLower) ||
+        request.bloodType.toLowerCase().includes(searchLower)
+      );
+    }
 
-      // Apply sorting
-      filtered = sortRequests(filtered, sortBy);
+    // Apply sorting
+    filtered = sortRequests(filtered, sortBy);
+    return filtered;
+  }, [sortRequests]);
+
+  // Debounced search with useMemo to stabilize the function
+  const debouncedSearch = useMemo(
+    () => debounce((searchTerm: string, allRequests: BloodRequest[], sortBy: string) => {
+      const filtered = filterAndSearchRequests(allRequests, searchTerm, sortBy);
       setFilteredRequests(filtered);
     }, 300),
-    [sortRequests]
+    [filterAndSearchRequests]
   );
 
   // Filter and sort requests
@@ -127,7 +133,7 @@ export default function BloodRequestsPage() {
     } else {
       setFilteredRequests([]);
     }
-  }, [requests, filters.search, filters.sortBy, debouncedSearch]);
+  }, [requests, filters.search, filters.sortBy]);
 
   const handleFiltersChange = (newFilters: FilterState) => {
     setFilters(newFilters);
