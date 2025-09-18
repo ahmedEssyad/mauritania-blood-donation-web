@@ -19,7 +19,7 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale: validLocale });
 
   return (
-    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+    <html lang={validLocale} dir={validLocale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <head>
         <meta name="theme-color" content="#ef4444" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -27,10 +27,13 @@ export default async function LocaleLayout({
         <meta name="apple-mobile-web-app-title" content="DonSang MR" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
-      <body className={cn(
-        'min-h-screen bg-background font-sans antialiased',
-        locale === 'ar' && 'font-arabic'
-      )}>
+      <body
+        className={cn(
+          'min-h-screen bg-background font-sans antialiased',
+          validLocale === 'ar' && 'font-arabic'
+        )}
+        suppressHydrationWarning
+      >
         <NextIntlClientProvider locale={validLocale} messages={messages}>
           <AuthProvider>
             {children}
