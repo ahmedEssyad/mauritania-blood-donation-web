@@ -25,7 +25,12 @@
     "creating": "Création en cours...",
     "description": "Description",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "anonymous": "Anonyme",
+    "location": "Localisation",
+    "sending": "Envoi...",
+    "processing": "Traitement...",
+    "donations": "dons"
   },
   "landing": {
     "hero": {
@@ -311,78 +316,52 @@
       "responses": "Réponses ({count})",
       "distance": "{distance} km",
       "createdAt": "Créée le",
-      "expiresAt": "Expire le",
-      "backToRequests": "Retour aux demandes",
-      "notFound": "Demande non trouvée",
-      "loadingError": "Erreur lors du chargement",
-      "description": "Description",
-      "medicalInfo": "Informations médicales",
-      "hospital": "Hôpital",
-      "condition": "Condition",
-      "doctor": "Médecin",
-      "location": "Localisation",
-      "contact": "Contact",
+      "viewDetails": "Voir les détails",
+      "expiresAt": "Expire à"
+    },
+    "notFound": "Demande non trouvée",
+    "backToList": "Retour à la liste",
+    "bloodTypeNeeded": "Type de sang {bloodType} requis",
+    "noDescription": "Aucune description fournie",
+    "expired": "Expirée",
+    "remaining": "restant",
+    "away": "de distance",
+    "responses": "réponses",
+    "respond": {
+      "title": "Répondre à cette demande",
       "alreadyResponded": "Vous avez déjà répondu à cette demande",
-      "respondToRequest": "Répondre à la demande",
-      "respondDescription": "Envoyez un message pour indiquer votre disponibilité pour donner du sang.",
-      "messageLabel": "Message (optionnel)",
-      "messagePlaceholder": "Je suis disponible pour donner du sang. Contactez-moi au...",
-      "cancel": "Annuler",
-      "sending": "Envoi...",
-      "sendResponse": "Envoyer la réponse",
-      "responses": "Réponses ({count})",
-      "anonymousDonor": "Donneur anonyme",
-      "selected": "Sélectionné",
-      "noResponses": "Aucune réponse pour le moment",
-      "timeInfo": "Informations temporelles",
-      "created": "Créée",
-      "expires": "Expire",
-      "urgentRequest": "Demande urgente",
-      "urgentDescription": "Cette demande nécessite une réponse immédiate. Si vous êtes compatible et disponible, veuillez répondre rapidement.",
-      "compatibility": "Compatibilité sanguine",
-      "typeNeeded": "Type recherché",
-      "compatibilityDescription": "Les donneurs compatibles peuvent avoir les groupes sanguins correspondant à ce type.",
-      "unknownDate": "Date inconnue",
-      "urgentNeed": "Besoin urgent"
+      "message": "Message (optionnel)",
+      "messagePlaceholder": "Indiquez votre disponibilité et tout message utile...",
+      "submit": "Envoyer ma réponse",
+      "notEligible": "Vous n'êtes pas éligible pour donner du sang actuellement"
+    },
+    "manage": {
+      "title": "Gérer cette demande",
+      "markFulfilled": "Marquer comme satisfaite",
+      "cancel": "Annuler la demande",
+      "notes": "Notes (optionnel)",
+      "notesPlaceholder": "Ajoutez des notes sur la fermeture de cette demande...",
+      "confirm": "Confirmer"
+    },
+    "responses": {
+      "title": "Réponses reçues",
+      "selectDonor": "Sélectionner ce donneur",
+      "selectedDonor": "Donneur sélectionné"
     }
   },
-  "profile": {
-    "title": "Profil",
-    "subtitle": "Gérez vos informations personnelles et vos préférences",
-    "personal": {
-      "title": "Informations personnelles",
-      "description": "Informations de base sur votre profil de donneur",
-      "name": "Nom",
-      "phone": "Téléphone",
-      "bloodType": "Groupe sanguin",
-      "lastDonation": "Dernier don",
-      "memberSince": "Membre depuis",
-      "eligibility": "Éligibilité",
-      "eligible": "Éligible",
-      "eligibleMessage": "Vous êtes éligible pour donner du sang",
-      "notEligible": "Non éligible",
-      "nextEligibleDate": "Prochaine éligibilité: {date}",
-      "contactDoctor": "Contactez votre médecin pour plus d'informations",
-      "notProvided": "Non renseigné",
-      "unknownDate": "Date inconnue",
-      "noDonationRecorded": "Aucun don enregistré",
-      "selectBloodType": "Sélectionner votre groupe sanguin",
-      "saving": "Enregistrement...",
-      "updateError": "Erreur lors de la mise à jour du profil",
-      "networkError": "Erreur réseau",
-      "nameMinLength": "Le nom doit contenir au moins 2 caractères"
+  "myRequests": {
+    "title": "Mes demandes de sang",
+    "subtitle": "Gérez vos demandes de sang et suivez les réponses",
+    "tabs": {
+      "all": "Toutes",
+      "active": "Actives",
+      "fulfilled": "Satisfaites",
+      "cancelled": "Annulées",
+      "expired": "Expirées"
     },
-    "stats": {
-      "title": "Statistiques",
-      "totalDonations": "Total des dons",
-      "thisYear": "Cette année",
-      "rating": "Note moyenne",
-      "achievements": "Réalisations"
-    },
-    "edit": {
-      "title": "Modifier le profil",
-      "save": "Enregistrer les modifications"
-    }
+    "noRequests": "Vous n'avez aucune demande de sang",
+    "noRequestsWithStatus": "Aucune demande {status}",
+    "createFirstRequest": "Créez votre première demande pour commencer"
   },
   "history": {
     "title": "Historique",
@@ -449,7 +428,7 @@
       "networkError": "Erreur réseau",
       "retry": "Réessayer"
     },
-    "empty": {
+    "emptyState": {
       "title": "Aucune notification",
       "description": "Vous recevrez des notifications lorsque des donneurs répondront à vos demandes ou lorsque de nouvelles demandes seront créées dans votre région."
     },
@@ -691,6 +670,42 @@
     }
   },
   "profile": {
+    "title": "Profil",
+    "subtitle": "Gérez vos informations personnelles et vos préférences",
+    "personal": {
+      "title": "Informations personnelles",
+      "description": "Informations de base sur votre profil de donneur",
+      "name": "Nom",
+      "phone": "Téléphone",
+      "bloodType": "Groupe sanguin",
+      "lastDonation": "Dernier don",
+      "memberSince": "Membre depuis",
+      "eligibility": "Éligibilité",
+      "eligible": "Éligible",
+      "eligibleMessage": "Vous êtes éligible pour donner du sang",
+      "notEligible": "Non éligible",
+      "nextEligibleDate": "Prochaine éligibilité: {date}",
+      "contactDoctor": "Contactez votre médecin pour plus d'informations",
+      "notProvided": "Non renseigné",
+      "unknownDate": "Date inconnue",
+      "noDonationRecorded": "Aucun don enregistré",
+      "selectBloodType": "Sélectionner votre groupe sanguin",
+      "saving": "Enregistrement...",
+      "updateError": "Erreur lors de la mise à jour du profil",
+      "networkError": "Erreur réseau",
+      "nameMinLength": "Le nom doit contenir au moins 2 caractères"
+    },
+    "stats": {
+      "title": "Statistiques",
+      "totalDonations": "Total des dons",
+      "thisYear": "Cette année",
+      "rating": "Note moyenne",
+      "achievements": "Réalisations"
+    },
+    "edit": {
+      "title": "Modifier le profil",
+      "save": "Enregistrer les modifications"
+    },
     "incomplete": {
       "title": "Profil incomplet",
       "subtitle": "Complétez votre profil pour une meilleure expérience",

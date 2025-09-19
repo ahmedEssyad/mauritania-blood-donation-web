@@ -589,6 +589,61 @@ class ApiService {
     return response.data;
   }
 
+  // Get single blood request with responses
+  async getBloodRequest(requestId: string): Promise<ApiResponse> {
+    const response = await this.client.get(`/blood-requests/${requestId}`);
+    return response.data;
+  }
+
+  // Get responses for a blood request (for request owners)
+  async getBloodRequestResponses(requestId: string): Promise<ApiResponse> {
+    try {
+      const response = await this.client.get(`/blood-requests/${requestId}/responses`);
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // Return mock data if endpoint doesn't exist yet
+        return {
+          success: true,
+          data: {
+            responses: []
+          }
+        };
+      }
+      throw error;
+    }
+  }
+
+  // Close/update blood request status
+  async closeBloodRequest(requestId: string, reason: 'FULFILLED' | 'CANCELLED', notes?: string): Promise<ApiResponse> {
+    const response = await this.client.put(`/blood-requests/${requestId}/close`, { reason, notes });
+    return response.data;
+  }
+
+  // Confirm donor selection for blood request
+  async confirmDonor(requestId: string, responseId: string): Promise<ApiResponse> {
+    const response = await this.client.post(`/blood-requests/${requestId}/confirm-donor`, { responseId });
+    return response.data;
+  }
+
+  // Get donation history with filtering
+  async getDonationHistory(params: any = {}): Promise<ApiResponse> {
+    const response = await this.client.get('/donations/history', { params });
+    return response.data;
+  }
+
+  // Get pending donation confirmations
+  async getPendingConfirmations(): Promise<ApiResponse> {
+    const response = await this.client.get('/donations/pending-confirmations');
+    return response.data;
+  }
+
+  // Rate a donation experience
+  async rateDonation(donationId: string, rating: number, feedback?: string): Promise<ApiResponse> {
+    const response = await this.client.post(`/donations/${donationId}/rate`, { rating, feedback });
+    return response.data;
+  }
+
 }
 
 export default new ApiService();

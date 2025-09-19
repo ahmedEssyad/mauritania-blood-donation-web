@@ -25,7 +25,12 @@
     "creating": "جاري الإنشاء...",
     "description": "الوصف",
     "yes": "نعم",
-    "no": "لا"
+    "no": "لا",
+    "anonymous": "مجهول",
+    "location": "الموقع",
+    "sending": "جاري الإرسال...",
+    "processing": "جاري المعالجة...",
+    "donations": "التبرعات"
   },
   "landing": {
     "hero": {
@@ -449,7 +454,7 @@
       "networkError": "خطأ في الشبكة",
       "retry": "إعادة المحاولة"
     },
-    "empty": {
+    "emptyState": {
       "title": "لا توجد إشعارات",
       "description": "ستتلقى إشعارات عندما يرد المتبرعون على طلباتك أو عند إنشاء طلبات جديدة في منطقتك."
     },
@@ -689,6 +694,20 @@
       "invalidFormat": "تنسيق غير صحيح",
       "duplicateEntry": "إدخال مكرر"
     }
+  },
+  "myRequests": {
+    "title": "طلباتي",
+    "subtitle": "إدارة ومتابعة طلبات الدم الخاصة بك",
+    "tabs": {
+      "all": "الكل",
+      "active": "نشط",
+      "fulfilled": "مكتمل",
+      "cancelled": "ملغي",
+      "expired": "منتهي الصلاحية"
+    },
+    "noRequests": "لا توجد لديك طلبات دم بعد",
+    "noRequestsWithStatus": "لا توجد طلبات بحالة {status}",
+    "createFirstRequest": "إنشاء أول طلب دم لك لتلقي المساعدة من المتبرعين"
   },
   "profile": {
     "incomplete": {

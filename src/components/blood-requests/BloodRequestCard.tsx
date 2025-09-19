@@ -177,14 +177,22 @@ export default function BloodRequestCard({
           )}
 
           {/* Actions */}
-          {showActions && request.status === 'active' && onRespond && (
+          {showActions && (
             <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t">
-              <Button
-                onClick={() => onRespond(request._id)}
-                className="w-full bg-red-500 hover:bg-red-600"
-              >
-                {t('bloodRequests.details.respond')}
-              </Button>
+              <Link href={`/${locale}/demandes/${request._id}`} className="flex-1">
+                <Button variant="outline" className="w-full">
+                  {t('bloodRequests.details.viewDetails')}
+                </Button>
+              </Link>
+
+              {request.status === 'active' && onRespond && (
+                <Button
+                  onClick={() => onRespond(request._id)}
+                  className="flex-1 bg-red-500 hover:bg-red-600"
+                >
+                  {t('bloodRequests.details.respond')}
+                </Button>
+              )}
             </div>
           )}
         </div>
