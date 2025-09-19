@@ -208,20 +208,43 @@ class ApiService {
         const profileResponse = await this.getProfile();
         if (profileResponse.success && profileResponse.data?.user) {
           const user = profileResponse.data.user;
-          const isComplete = !!(user.bloodType && user.coordinates && user.profileCompleted);
+
+          // More reliable completion logic:
+          // 1. Check if user explicitly marked profile as complete
+          // 2. OR check if all required fields are present (blood type + coordinates)
+          const hasRequiredFields = !!(user.bloodType && user.coordinates);
+          const isMarkedComplete = user.profileCompleted === true;
+          const isComplete = isMarkedComplete || hasRequiredFields;
+
+          // Calculate missing fields only if profile is not complete
+          const missingFields: Record<string, string> = {};
+          if (!isComplete) {
+            if (!user.bloodType) {
+              missingFields.bloodType = "Groupe sanguin requis";
+            }
+            if (!user.coordinates) {
+              missingFields.coordinates = "Localisation requise pour recevoir des demandes";
+            }
+            // Only require explicit completion if other fields are missing
+            if (!hasRequiredFields && !user.profileCompleted) {
+              missingFields.profileCompleted = "Veuillez marquer le profil comme terminé";
+            }
+          }
+
+          // Calculate completion percentage
+          let completionPercentage = 0;
+          if (user.bloodType) completionPercentage += 40;
+          if (user.coordinates) completionPercentage += 40;
+          if (user.lastDonationDate !== undefined) completionPercentage += 10; // Optional field
+          if (user.profileCompleted || hasRequiredFields) completionPercentage += 10;
 
           return {
             success: true,
             data: {
               profileCompleted: user.profileCompleted || false,
               isProfileComplete: isComplete,
-              missingFields: {
-                ...((!user.bloodType) && { bloodType: "Groupe sanguin requis" }),
-                ...((!user.lastDonationDate && user.lastDonationDate !== null) && { lastDonationDate: "Date du dernier don requise (ou sélectionnez \"Jamais donné\")" }),
-                ...((!user.coordinates) && { coordinates: "Localisation requise pour recevoir des demandes" }),
-                ...((!user.profileCompleted) && { profileCompleted: "Veuillez marquer le profil comme terminé" })
-              },
-              completionPercentage: isComplete ? 100 : 25,
+              missingFields,
+              completionPercentage: Math.min(completionPercentage, 100),
               nextSteps: isComplete ? "Profil complet" : "Complétez les champs manquants pour finaliser votre profil"
             }
           };
