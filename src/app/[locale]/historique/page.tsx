@@ -116,7 +116,7 @@ export default function DonationHistoryPage({ params }: { params: Promise<{ loca
               </div>
               <div>
                 <div className="font-medium text-gray-900">
-                  {t('history.donation.bloodDonation')} • {donation.request?.bloodType}
+                  {t('history.donation.bloodDonation')} • {donation.donorUserId?.bloodType || donation.requesterUserId?.bloodType}
                 </div>
                 <div className="text-sm text-gray-500">{timeAgo}</div>
               </div>

@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
-import { ApiResponse } from '@/types';
+import { ApiResponse, ProfileIncompleteError } from '@/types/api';
 
 interface RetryConfig {
   retries: number;
@@ -77,17 +77,27 @@ class ApiService {
       async (error) => {
         const originalRequest = error.config;
 
-        // Handle timeout and network errors with better messages
+        // Handle timeout and network errors with standardized error codes
         if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
           const timeoutError = new Error('Connection timeout. Please check your internet connection and try again.');
-          timeoutError.code = 'TIMEOUT';
+          (timeoutError as any).code = 'TIMEOUT';
+          (timeoutError as any).isNetworkError = true;
           return Promise.reject(timeoutError);
         }
 
         if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
           const networkError = new Error('Cannot connect to server. Please check your internet connection.');
-          networkError.code = 'NETWORK_ERROR';
+          (networkError as any).code = 'NETWORK_ERROR';
+          (networkError as any).isNetworkError = true;
           return Promise.reject(networkError);
+        }
+
+        // Handle offline status
+        if (!navigator.onLine) {
+          const offlineError = new Error('You are offline. Please check your internet connection.');
+          (offlineError as any).code = 'OFFLINE';
+          (offlineError as any).isNetworkError = true;
+          return Promise.reject(offlineError);
         }
 
         if (error.response?.status === 401 && !originalRequest._retry) {
@@ -181,10 +191,44 @@ class ApiService {
     name?: string;
     bloodType?: string;
     lastDonationDate?: string | null;
+    coordinates?: { latitude: number; longitude: number };
     profileCompleted?: boolean;
   }): Promise<ApiResponse> {
     const response = await this.client.put('/user/profile', data);
     return response.data;
+  }
+
+  async getProfileCompletionStatus(): Promise<ApiResponse> {
+    try {
+      const response = await this.client.get('/user/profile-completion-status');
+      return response.data;
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        // If endpoint doesn't exist, check profile manually
+        const profileResponse = await this.getProfile();
+        if (profileResponse.success && profileResponse.data?.user) {
+          const user = profileResponse.data.user;
+          const isComplete = !!(user.bloodType && user.coordinates && user.profileCompleted);
+
+          return {
+            success: true,
+            data: {
+              profileCompleted: user.profileCompleted || false,
+              isProfileComplete: isComplete,
+              missingFields: {
+                ...((!user.bloodType) && { bloodType: "Groupe sanguin requis" }),
+                ...((!user.lastDonationDate && user.lastDonationDate !== null) && { lastDonationDate: "Date du dernier don requise (ou sélectionnez \"Jamais donné\")" }),
+                ...((!user.coordinates) && { coordinates: "Localisation requise pour recevoir des demandes" }),
+                ...((!user.profileCompleted) && { profileCompleted: "Veuillez marquer le profil comme terminé" })
+              },
+              completionPercentage: isComplete ? 100 : 25,
+              nextSteps: isComplete ? "Profil complet" : "Complétez les champs manquants pour finaliser votre profil"
+            }
+          };
+        }
+      }
+      throw error;
+    }
   }
 
   async getEligibilityStatus(): Promise<ApiResponse> {
@@ -315,6 +359,12 @@ class ApiService {
 
   async createBloodRequest(data: any): Promise<ApiResponse> {
     const response = await this.client.post('/blood-requests', data);
+
+    // Check if profile is incomplete
+    if (response.data.profileIncomplete) {
+      throw new ProfileIncompleteError(response.data);
+    }
+
     return response.data;
   }
 
@@ -325,6 +375,12 @@ class ApiService {
 
   async respondToRequest(requestId: string, message?: string): Promise<ApiResponse> {
     const response = await this.client.post(`/blood-requests/${requestId}/respond`, { message });
+
+    // Check if profile is incomplete
+    if (response.data.profileIncomplete) {
+      throw new ProfileIncompleteError(response.data);
+    }
+
     return response.data;
   }
 
@@ -340,6 +396,12 @@ class ApiService {
 
   async respondToBloodRequest(requestId: string, data: { message?: string; availableAt?: string }): Promise<ApiResponse> {
     const response = await this.client.post(`/blood-requests/${requestId}/respond`, data);
+
+    // Check if profile is incomplete
+    if (response.data.profileIncomplete) {
+      throw new ProfileIncompleteError(response.data);
+    }
+
     return response.data;
   }
 
@@ -468,6 +530,39 @@ class ApiService {
 
   async getUnreadCount(): Promise<ApiResponse> {
     const response = await this.client.get('/notifications/unread-count');
+    return response.data;
+  }
+
+  // Méthodes manquantes pour les notifications
+  async getNotificationSettings(): Promise<ApiResponse> {
+    const response = await this.client.get('/notifications/settings');
+    return response.data;
+  }
+
+  async updateNotificationSettings(settings: any): Promise<ApiResponse> {
+    const response = await this.client.put('/notifications/preferences', settings);
+    return response.data;
+  }
+
+  // Endpoint pour les demandes par utilisateur
+  async getMyBloodRequests(params: any = {}): Promise<ApiResponse> {
+    const response = await this.client.get('/blood-requests/my-requests', { params });
+    return response.data;
+  }
+
+  // Endpoint pour supprimer une demande
+  async deleteBloodRequest(requestId: string): Promise<ApiResponse> {
+    const response = await this.client.delete(`/blood-requests/${requestId}`);
+    return response.data;
+  }
+
+  // Endpoint pour confirmer la réception d'un don
+  async confirmDonationReceived(donationId: string, data: {
+    notes?: string;
+    rating?: number;
+    feedback?: string;
+  }): Promise<ApiResponse> {
+    const response = await this.client.put(`/donations/${donationId}/confirm-received`, data);
     return response.data;
   }
 

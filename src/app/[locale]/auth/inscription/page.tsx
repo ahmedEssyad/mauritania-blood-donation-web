@@ -7,9 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Droplets, Eye, EyeOff } from 'lucide-react';
+import { Droplets } from 'lucide-react';
 import Link from 'next/link';
-import { BloodType } from '@/types';
 import apiService from '@/lib/api';
 
 export default function RegisterPage() {
@@ -17,20 +16,12 @@ export default function RegisterPage() {
   const locale = params.locale as string;
   const [formData, setFormData] = useState({
     phone: '',
-    name: '',
-    bloodType: '' as BloodType,
-    password: '',
-    confirmPassword: '',
   });
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const router = useRouter();
   const t = useTranslations();
-
-  const bloodTypes: BloodType[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -41,14 +32,8 @@ export default function RegisterPage() {
     setIsLoading(true);
     setError('');
 
-    if (formData.password !== formData.confirmPassword) {
-      setError(t('errors.passwordMismatch'));
-      setIsLoading(false);
-      return;
-    }
-
-    if (formData.password.length < 6) {
-      setError(t('errors.passwordTooShort'));
+    if (!formData.phone.trim()) {
+      setError(t('errors.phoneRequired'));
       setIsLoading(false);
       return;
     }
@@ -57,8 +42,8 @@ export default function RegisterPage() {
       // Send OTP first
       await apiService.sendOTP(formData.phone);
 
-      // Store registration data and navigate to OTP verification
-      localStorage.setItem('registrationData', JSON.stringify(formData));
+      // Store phone for registration flow
+      localStorage.setItem('registrationPhone', formData.phone);
       router.push(`/${locale}/auth/verification?phone=${encodeURIComponent(formData.phone)}&type=register`);
     } catch (err: any) {
       setError(err.message || t('errors.networkError'));
@@ -80,7 +65,7 @@ export default function RegisterPage() {
             {t('auth.register.title')}
           </CardTitle>
           <CardDescription className="text-gray-600">
-            {t('common.appName')}
+            {t('auth.register.subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -96,115 +81,37 @@ export default function RegisterPage() {
                 required
                 disabled={isLoading}
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="name">{t('auth.register.name')}</Label>
-              <Input
-                id="name"
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                required
-                disabled={isLoading}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="bloodType">{t('auth.register.bloodType')}</Label>
-              <select
-                id="bloodType"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                value={formData.bloodType}
-                onChange={(e) => handleInputChange('bloodType', e.target.value)}
-                required
-                disabled={isLoading}
-              >
-                <option value="">{t('auth.register.bloodType')}</option>
-                {bloodTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {t(`bloodTypes.${type}`)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">{t('auth.register.password')}</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">{t('auth.register.confirmPassword')}</Label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={formData.confirmPassword}
-                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
-                  ) : (
-                    <Eye className="h-4 w-4 text-gray-400" />
-                  )}
-                </button>
-              </div>
+              <p className="text-xs text-gray-500">
+                {t('auth.register.phoneHelp')}
+              </p>
             </div>
 
             {error && (
-              <div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">
+              <div className="text-red-600 text-sm text-center">
                 {error}
               </div>
             )}
 
             <Button
               type="submit"
-              className="w-full"
-              disabled={isLoading}
+              className="w-full bg-red-500 hover:bg-red-600"
+              disabled={isLoading || !formData.phone.trim()}
             >
-              {isLoading ? t('common.loading') : t('auth.register.submit')}
+              {isLoading ? t('common.loading') : t('auth.register.sendVerificationCode')}
             </Button>
-
-            <div className="text-center">
-              <div className="text-sm text-gray-600">
-                {t('auth.register.hasAccount')}{' '}
-                <Link
-                  href={`/${locale}/auth/connexion`}
-                  className="text-red-600 hover:text-red-700 font-medium"
-                >
-                  {t('auth.register.login')}
-                </Link>
-              </div>
-            </div>
           </form>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              {t('auth.register.alreadyHaveAccount')}{' '}
+              <Link
+                href={`/${locale}/auth/connexion`}
+                className="text-red-600 hover:text-red-700 font-medium"
+              >
+                {t('auth.register.login')}
+              </Link>
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

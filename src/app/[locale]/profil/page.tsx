@@ -42,8 +42,6 @@ const createProfileSchema = (t: any) => z.object({
   lastDonationDate: z.string().optional(),
 });
 
-type ProfileFormData = z.infer<typeof profileSchema>;
-
 export default function ProfilePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = React.use(params);
   const [isEditing, setIsEditing] = useState(false);
@@ -55,8 +53,9 @@ export default function ProfilePage({ params }: { params: Promise<{ locale: stri
   const { user, refreshUser } = useAuth();
   const t = useTranslations();
 
-  const form = useForm<ProfileFormData>({
-    resolver: zodResolver(createProfileSchema(t)),
+  const profileSchema = createProfileSchema(t);
+  const form = useForm<z.infer<typeof profileSchema>>({
+    resolver: zodResolver(profileSchema),
     defaultValues: {
       name: user?.name || '',
       bloodType: user?.bloodType || undefined,

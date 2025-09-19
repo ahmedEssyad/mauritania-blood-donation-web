@@ -23,7 +23,9 @@
     "phone": "Numéro de téléphone",
     "continue": "Continuer",
     "creating": "Création en cours...",
-    "description": "Description"
+    "description": "Description",
+    "yes": "Oui",
+    "no": "Non"
   },
   "landing": {
     "hero": {
@@ -81,14 +83,62 @@
     },
     "register": {
       "title": "Inscription",
+      "subtitle": "Créez votre compte Munkidh",
       "phone": "Numéro de téléphone",
-      "name": "Nom complet",
-      "bloodType": "Groupe sanguin",
+      "phoneHelp": "Format : +222 XX XX XX XX ou 222XXXXXXXX",
+      "sendVerificationCode": "Envoyer le code de vérification",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?",
+      "login": "Se connecter"
+    },
+    "setPassword": {
+      "title": "Définir votre mot de passe",
+      "subtitle": "Créez un mot de passe sécurisé pour {phone}",
       "password": "Mot de passe",
       "confirmPassword": "Confirmer le mot de passe",
-      "submit": "S'inscrire",
-      "hasAccount": "Déjà un compte ?",
-      "login": "Se connecter"
+      "submit": "Créer mon compte",
+      "requirements": {
+        "length": "Au moins 8 caractères",
+        "uppercase": "Au moins une majuscule",
+        "lowercase": "Au moins une minuscule",
+        "digit": "Au moins un chiffre"
+      }
+    },
+    "completeProfile": {
+      "title": "Complétez votre profil",
+      "subtitle": "Quelques informations pour terminer votre inscription",
+      "step": "Étape",
+      "of": "sur",
+      "next": "Suivant",
+      "previous": "Précédent",
+      "finish": "Terminer",
+      "step1": {
+        "title": "Comment vous appeler ?",
+        "subtitle": "Votre nom sera visible par les autres utilisateurs",
+        "name": "Nom complet",
+        "namePlaceholder": "Entrez votre nom complet",
+        "nameHelp": "Ce nom sera affiché sur votre profil public"
+      },
+      "step2": {
+        "title": "Votre groupe sanguin",
+        "subtitle": "Cette information est essentielle pour les demandes",
+        "bloodType": "Groupe sanguin",
+        "selectBloodType": "Sélectionnez votre groupe sanguin"
+      },
+      "step3": {
+        "title": "Historique de don",
+        "subtitle": "Quand avez-vous donné votre sang pour la dernière fois ?",
+        "lastDonationDate": "Date du dernier don",
+        "firstTimeHelp": "C'est votre premier don ?",
+        "firstTimeDonor": "Je n'ai jamais donné"
+      },
+      "step4": {
+        "title": "Votre localisation",
+        "subtitle": "Nous en avons besoin pour vous connecter aux demandes proches",
+        "locationHelp": "Activez la géolocalisation pour recevoir des demandes dans votre région",
+        "enableLocation": "Activer la géolocalisation",
+        "locationSuccess": "Localisation activée avec succès !",
+        "locationCoords": "Position : {lat}, {lng}"
+      }
     },
     "otp": {
       "title": "Vérification",
@@ -240,7 +290,9 @@
       "high": "Élevée",
       "HIGH": "Élevée",
       "urgent": "Urgente",
-      "URGENT": "Urgente"
+      "URGENT": "Urgente",
+      "critical": "Critique",
+      "CRITICAL": "Critique"
     },
     "status": {
       "active": "Active",
@@ -289,7 +341,9 @@
       "urgentDescription": "Cette demande nécessite une réponse immédiate. Si vous êtes compatible et disponible, veuillez répondre rapidement.",
       "compatibility": "Compatibilité sanguine",
       "typeNeeded": "Type recherché",
-      "compatibilityDescription": "Les donneurs compatibles peuvent avoir les groupes sanguins correspondant à ce type."
+      "compatibilityDescription": "Les donneurs compatibles peuvent avoir les groupes sanguins correspondant à ce type.",
+      "unknownDate": "Date inconnue",
+      "urgentNeed": "Besoin urgent"
     }
   },
   "profile": {
@@ -378,11 +432,9 @@
     "title": "Notifications",
     "markAllRead": "Tout marquer comme lu",
     "empty": "Aucune notification",
-    "unreadCount": {
-      "single": "{count} notification non lue",
-      "plural": "{count} notifications non lues",
-      "allRead": "Toutes les notifications sont lues"
-    },
+    "refresh": "Actualiser",
+    "new": "Nouveau",
+    "unreadCount": "{count} notification{count, plural, =0 {} one {} other {s}} non lue{count, plural, =0 {} one {} other {s}}",
     "actions": {
       "refreshing": "Actualisation...",
       "marking": "Marquage...",
@@ -494,32 +546,161 @@
     }
   },
   "errors": {
-    "title": "Une erreur s'est produite",
-    "description": "Quelque chose s'est mal passé. Veuillez réessayer.",
-    "retry": "Réessayer",
-    "required": "Ce champ est requis",
-    "invalidPhone": "Numéro de téléphone invalide",
-    "invalidEmail": "Email invalide",
-    "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
-    "passwordMismatch": "Les mots de passe ne correspondent pas",
-    "networkError": "Erreur de réseau",
-    "serverError": "Erreur du serveur",
-    "unauthorized": "Non autorisé",
-    "forbidden": "Accès interdit",
-    "notFound": "Non trouvé",
-    "validationError": "Erreur de validation",
+    "general": {
+      "title": "Une erreur s'est produite",
+      "description": "Quelque chose s'est mal passé. Veuillez réessayer.",
+      "retry": "Réessayer",
+      "unknown": "Erreur inconnue",
+      "tryAgain": "Veuillez réessayer",
+      "contactSupport": "Contactez le support si le problème persiste"
+    },
     "api": {
       "title": "Erreur de connexion",
-      "description": "Impossible de charger les données. Vérifiez votre connexion."
+      "description": "Impossible de charger les données. Vérifiez votre connexion.",
+      "network": "Erreur de réseau",
+      "timeout": "Délai d'attente de connexion dépassé",
+      "serverError": "Erreur du serveur",
+      "internalServerError": "Erreur interne du serveur (500)",
+      "badGateway": "Passerelle incorrecte (502)",
+      "serviceUnavailable": "Service indisponible (503)",
+      "gatewayTimeout": "Délai d'attente de la passerelle (504)",
+      "unauthorized": "Non autorisé (401)",
+      "forbidden": "Accès interdit (403)",
+      "notFound": "Non trouvé (404)",
+      "conflict": "Conflit de données (409)",
+      "rateLimited": "Trop de requêtes. Veuillez patienter.",
+      "badRequest": "Requête invalide (400)",
+      "unprocessableEntity": "Données non traitables (422)",
+      "offline": "Vous êtes hors ligne. Vérifiez votre connexion internet.",
+      "connectionLost": "Connexion perdue. Reconnexion en cours...",
+      "connectionRestored": "Connexion rétablie"
+    },
+    "validation": {
+      "required": "Ce champ est requis",
+      "invalidPhone": "Numéro de téléphone invalide",
+      "invalidEmail": "Adresse email invalide",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "emailRequired": "L'adresse email est requise",
+      "nameRequired": "Le nom est requis",
+      "nameMinLength": "Le nom doit contenir au moins 2 caractères",
+      "nameMaxLength": "Le nom ne peut pas dépasser 50 caractères",
+      "descriptionRequired": "La description est requise",
+      "descriptionMinLength": "La description doit contenir au moins 10 caractères",
+      "descriptionMaxLength": "La description ne peut pas dépasser 500 caractères",
+      "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+      "passwordTooLong": "Le mot de passe ne peut pas dépasser 128 caractères",
+      "passwordNeedsLowercase": "Le mot de passe doit contenir au moins une minuscule",
+      "passwordNeedsUppercase": "Le mot de passe doit contenir au moins une majuscule",
+      "passwordNeedsDigit": "Le mot de passe doit contenir au moins un chiffre",
+      "passwordNeedsSpecialChar": "Le mot de passe doit contenir au moins un caractère spécial",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "invalidBloodType": "Groupe sanguin invalide",
+      "invalidUrgency": "Niveau d'urgence invalide",
+      "invalidDate": "Date invalide",
+      "futureDateNotAllowed": "Les dates futures ne sont pas autorisées",
+      "pastDateRequired": "La date doit être dans le passé",
+      "invalidCoordinates": "Coordonnées de localisation invalides"
+    },
+    "authentication": {
+      "loginFailed": "Échec de la connexion. Vérifiez vos identifiants.",
+      "otpInvalid": "Code de vérification invalide",
+      "otpExpired": "Code de vérification expiré",
+      "otpRequired": "Code de vérification requis",
+      "phoneNotVerified": "Numéro de téléphone non vérifié",
+      "accountLocked": "Compte verrouillé temporairement",
+      "accountNotActivated": "Compte non activé",
+      "tokenExpired": "Session expirée. Veuillez vous reconnecter.",
+      "tokenInvalid": "Session invalide. Veuillez vous reconnecter.",
+      "refreshTokenExpired": "Session expirée. Reconnexion requise.",
+      "sessionTimeout": "Session expirée pour des raisons de sécurité",
+      "logoutFailed": "Échec de la déconnexion",
+      "passwordResetFailed": "Échec de la réinitialisation du mot de passe",
+      "emailAlreadyExists": "Cette adresse email est déjà utilisée",
+      "phoneAlreadyExists": "Ce numéro de téléphone est déjà utilisé"
     },
     "location": {
       "denied": "Accès à la localisation refusé",
       "unavailable": "Localisation indisponible",
-      "timeout": "Délai d'attente de la localisation dépassé"
+      "timeout": "Délai d'attente de la localisation dépassé",
+      "notSupported": "Géolocalisation non supportée par ce navigateur",
+      "positionUnavailable": "Position indisponible",
+      "permissionDenied": "Permission de géolocalisation refusée",
+      "enableLocation": "Veuillez activer la géolocalisation dans les paramètres",
+      "addressNotFound": "Adresse non trouvée",
+      "geocodingFailed": "Échec de la géolocalisation",
+      "coordinatesRequired": "Coordonnées requises",
+      "invalidAddress": "Adresse invalide"
+    },
+    "profile": {
+      "incomplete": "Profil incomplet",
+      "incompleteMessage": "Veuillez compléter votre profil pour continuer",
+      "missingBloodType": "Groupe sanguin requis",
+      "missingLocation": "Localisation requise",
+      "missingName": "Nom requis",
+      "missingPhone": "Numéro de téléphone requis",
+      "updateFailed": "Échec de la mise à jour du profil",
+      "completionRequired": "Achèvement du profil requis pour cette action",
+      "eligibilityCheckFailed": "Échec de la vérification d'éligibilité"
+    },
+    "bloodRequest": {
+      "createFailed": "Échec de la création de la demande",
+      "updateFailed": "Échec de la mise à jour de la demande",
+      "deleteFailed": "Échec de la suppression de la demande",
+      "respondFailed": "Échec de la réponse à la demande",
+      "alreadyResponded": "Vous avez déjà répondu à cette demande",
+      "notFound": "Demande non trouvée",
+      "expired": "Cette demande a expiré",
+      "cancelled": "Cette demande a été annulée",
+      "fullfilled": "Cette demande a déjà été satisfaite",
+      "unauthorizedAccess": "Accès non autorisé à cette demande",
+      "loadFailed": "Échec du chargement des demandes"
+    },
+    "donation": {
+      "confirmFailed": "Échec de la confirmation du don",
+      "rateFailed": "Échec de l'évaluation du don",
+      "historyLoadFailed": "Échec du chargement de l'historique",
+      "eligibilityFailed": "Échec de la vérification d'éligibilité",
+      "notEligible": "Vous n'êtes pas éligible pour donner du sang actuellement",
+      "tooSoonToDonate": "Il est trop tôt pour donner du sang à nouveau"
     },
     "notification": {
       "denied": "Notifications refusées",
-      "unsupported": "Notifications non supportées"
+      "unsupported": "Notifications non supportées",
+      "loadFailed": "Échec du chargement des notifications",
+      "markReadFailed": "Échec du marquage comme lu",
+      "permissionRequired": "Permission de notification requise",
+      "enableNotifications": "Veuillez activer les notifications"
+    },
+    "upload": {
+      "tooLarge": "Fichier trop volumineux",
+      "invalidFormat": "Format de fichier invalide",
+      "uploadFailed": "Échec du téléversement",
+      "maxSizeExceeded": "Taille maximale dépassée ({maxSize})",
+      "typeNotAllowed": "Type de fichier non autorisé",
+      "processingFailed": "Échec du traitement du fichier"
+    },
+    "form": {
+      "validationFailed": "Erreur de validation du formulaire",
+      "requiredFields": "Veuillez remplir tous les champs requis",
+      "invalidData": "Données invalides",
+      "submitFailed": "Échec de l'envoi du formulaire",
+      "fieldTooLong": "Ce champ est trop long",
+      "fieldTooShort": "Ce champ est trop court",
+      "invalidFormat": "Format invalide",
+      "duplicateEntry": "Entrée en double"
+    }
+  },
+  "profile": {
+    "incomplete": {
+      "title": "Profil incomplet",
+      "subtitle": "Complétez votre profil pour une meilleure expérience",
+      "progress": "Progression",
+      "missingFields": "Champs manquants",
+      "nextSteps": "Prochaines étapes",
+      "later": "Plus tard",
+      "completeNow": "Compléter maintenant",
+      "continueAnyway": "Continuer quand même",
+      "completeForBetterExperience": "Complétez votre profil pour accéder à toutes les fonctionnalités"
     }
   }
 }

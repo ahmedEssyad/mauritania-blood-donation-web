@@ -23,7 +23,9 @@
     "phone": "رقم الهاتف",
     "continue": "متابعة",
     "creating": "جاري الإنشاء...",
-    "description": "الوصف"
+    "description": "الوصف",
+    "yes": "نعم",
+    "no": "لا"
   },
   "landing": {
     "hero": {
@@ -81,14 +83,62 @@
     },
     "register": {
       "title": "إنشاء حساب",
+      "subtitle": "أنشئ حسابك في منقذ",
       "phone": "رقم الهاتف",
-      "name": "الاسم الكامل",
-      "bloodType": "فصيلة الدم",
+      "phoneHelp": "التنسيق: +222 XX XX XX XX أو 222XXXXXXXX",
+      "sendVerificationCode": "إرسال رمز التحقق",
+      "alreadyHaveAccount": "لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول"
+    },
+    "setPassword": {
+      "title": "تعيين كلمة المرور",
+      "subtitle": "أنشئ كلمة مرور آمنة لـ {phone}",
       "password": "كلمة المرور",
       "confirmPassword": "تأكيد كلمة المرور",
-      "submit": "إنشاء حساب",
-      "hasAccount": "لديك حساب بالفعل؟",
-      "login": "تسجيل الدخول"
+      "submit": "إنشاء حسابي",
+      "requirements": {
+        "length": "على الأقل 8 أحرف",
+        "uppercase": "حرف كبير واحد على الأقل",
+        "lowercase": "حرف صغير واحد على الأقل",
+        "digit": "رقم واحد على الأقل"
+      }
+    },
+    "completeProfile": {
+      "title": "أكمل ملفك الشخصي",
+      "subtitle": "بعض المعلومات لإنهاء تسجيلك",
+      "step": "الخطوة",
+      "of": "من",
+      "next": "التالي",
+      "previous": "السابق",
+      "finish": "إنهاء",
+      "step1": {
+        "title": "ما اسمك؟",
+        "subtitle": "سيكون اسمك مرئيًا للمستخدمين الآخرين",
+        "name": "الاسم الكامل",
+        "namePlaceholder": "أدخل اسمك الكامل",
+        "nameHelp": "سيظهر هذا الاسم في ملفك الشخصي العام"
+      },
+      "step2": {
+        "title": "فصيلة دمك",
+        "subtitle": "هذه المعلومات ضرورية للطلبات",
+        "bloodType": "فصيلة الدم",
+        "selectBloodType": "اختر فصيلة دمك"
+      },
+      "step3": {
+        "title": "تاريخ التبرع",
+        "subtitle": "متى تبرعت بالدم آخر مرة؟",
+        "lastDonationDate": "تاريخ آخر تبرع",
+        "firstTimeHelp": "هل هذا تبرعك الأول؟",
+        "firstTimeDonor": "لم أتبرع من قبل"
+      },
+      "step4": {
+        "title": "موقعك",
+        "subtitle": "نحتاجه لربطك بالطلبات القريبة",
+        "locationHelp": "فعّل تحديد الموقع لتلقي طلبات في منطقتك",
+        "enableLocation": "تفعيل تحديد الموقع",
+        "locationSuccess": "تم تفعيل الموقع بنجاح!",
+        "locationCoords": "الموقع: {lat}, {lng}"
+      }
     },
     "otp": {
       "title": "التحقق",
@@ -240,7 +290,9 @@
       "high": "عالي",
       "HIGH": "عالي",
       "urgent": "عاجل",
-      "URGENT": "عاجل"
+      "URGENT": "عاجل",
+      "critical": "حرج",
+      "CRITICAL": "حرج"
     },
     "status": {
       "active": "نشط",
@@ -289,7 +341,9 @@
       "urgentDescription": "يتطلب هذا الطلب رداً فورياً. إذا كنت متوافقاً ومتاحاً، يرجى الرد بسرعة.",
       "compatibility": "توافق فصائل الدم",
       "typeNeeded": "النوع المطلوب",
-      "compatibilityDescription": "يمكن للمتبرعين المتوافقين أن يكون لديهم فصائل الدم المطابقة لهذا النوع."
+      "compatibilityDescription": "يمكن للمتبرعين المتوافقين أن يكون لديهم فصائل الدم المطابقة لهذا النوع.",
+      "unknownDate": "تاريخ غير معروف",
+      "urgentNeed": "حاجة عاجلة"
     }
   },
   "profile": {
@@ -378,11 +432,9 @@
     "title": "الإشعارات",
     "markAllRead": "تحديد الكل كمقروء",
     "empty": "لا توجد إشعارات",
-    "unreadCount": {
-      "single": "{count} إشعار غير مقروء",
-      "plural": "{count} إشعارات غير مقروءة",
-      "allRead": "جميع الإشعارات مقروءة"
-    },
+    "refresh": "تحديث",
+    "new": "جديد",
+    "unreadCount": "{count} إشعار{count, plural, =0 {} =1 {} =2 {ان} few {ات} many {اً} other {ات}} غير مقروء{count, plural, =0 {} =1 {} =2 {ان} few {ة} many {ة} other {ة}}",
     "actions": {
       "refreshing": "جاري التحديث...",
       "marking": "جاري التحديد...",
@@ -494,32 +546,161 @@
     }
   },
   "errors": {
-    "title": "حدث خطأ",
-    "description": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-    "retry": "إعادة المحاولة",
-    "required": "هذا الحقل مطلوب",
-    "invalidPhone": "رقم هاتف غير صحيح",
-    "invalidEmail": "بريد إلكتروني غير صحيح",
-    "passwordTooShort": "كلمة المرور يجب أن تحتوي على 6 أحرف على الأقل",
-    "passwordMismatch": "كلمات المرور غير متطابقة",
-    "networkError": "خطأ في الشبكة",
-    "serverError": "خطأ في الخادم",
-    "unauthorized": "غير مخول",
-    "forbidden": "ممنوع الوصول",
-    "notFound": "غير موجود",
-    "validationError": "خطأ في التحقق",
+    "general": {
+      "title": "حدث خطأ",
+      "description": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+      "retry": "إعادة المحاولة",
+      "unknown": "خطأ غير معروف",
+      "tryAgain": "يرجى المحاولة مرة أخرى",
+      "contactSupport": "اتصل بالدعم إذا استمرت المشكلة"
+    },
     "api": {
       "title": "خطأ في الاتصال",
-      "description": "تعذر تحميل البيانات. تحقق من اتصالك بالإنترنت."
+      "description": "تعذر تحميل البيانات. تحقق من اتصالك بالإنترنت.",
+      "network": "خطأ في الشبكة",
+      "timeout": "انتهت مهلة الاتصال",
+      "serverError": "خطأ في الخادم",
+      "internalServerError": "خطأ داخلي في الخادم (500)",
+      "badGateway": "بوابة خاطئة (502)",
+      "serviceUnavailable": "الخدمة غير متاحة (503)",
+      "gatewayTimeout": "انتهت مهلة البوابة (504)",
+      "unauthorized": "غير مخول (401)",
+      "forbidden": "ممنوع الوصول (403)",
+      "notFound": "غير موجود (404)",
+      "conflict": "تضارب في البيانات (409)",
+      "rateLimited": "طلبات كثيرة جداً. يرجى الانتظار.",
+      "badRequest": "طلب غير صحيح (400)",
+      "unprocessableEntity": "بيانات غير قابلة للمعالجة (422)",
+      "offline": "أنت غير متصل. تحقق من اتصالك بالإنترنت.",
+      "connectionLost": "فقدان الاتصال. جاري إعادة الاتصال...",
+      "connectionRestored": "تم استعادة الاتصال"
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب",
+      "invalidPhone": "رقم هاتف غير صحيح",
+      "invalidEmail": "عنوان بريد إلكتروني غير صحيح",
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "emailRequired": "عنوان البريد الإلكتروني مطلوب",
+      "nameRequired": "الاسم مطلوب",
+      "nameMinLength": "يجب أن يحتوي الاسم على حرفين على الأقل",
+      "nameMaxLength": "لا يمكن أن يتجاوز الاسم 50 حرفاً",
+      "descriptionRequired": "الوصف مطلوب",
+      "descriptionMinLength": "يجب أن يحتوي الوصف على 10 أحرف على الأقل",
+      "descriptionMaxLength": "لا يمكن أن يتجاوز الوصف 500 حرف",
+      "passwordTooShort": "كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل",
+      "passwordTooLong": "لا يمكن أن تتجاوز كلمة المرور 128 حرف",
+      "passwordNeedsLowercase": "كلمة المرور يجب أن تحتوي على حرف صغير واحد على الأقل",
+      "passwordNeedsUppercase": "كلمة المرور يجب أن تحتوي على حرف كبير واحد على الأقل",
+      "passwordNeedsDigit": "كلمة المرور يجب أن تحتوي على رقم واحد على الأقل",
+      "passwordNeedsSpecialChar": "كلمة المرور يجب أن تحتوي على رمز خاص واحد على الأقل",
+      "passwordMismatch": "كلمات المرور غير متطابقة",
+      "invalidBloodType": "فصيلة دم غير صحيحة",
+      "invalidUrgency": "مستوى إلحاح غير صحيح",
+      "invalidDate": "تاريخ غير صحيح",
+      "futureDateNotAllowed": "التواريخ المستقبلية غير مسموحة",
+      "pastDateRequired": "يجب أن يكون التاريخ في الماضي",
+      "invalidCoordinates": "إحداثيات موقع غير صحيحة"
+    },
+    "authentication": {
+      "loginFailed": "فشل تسجيل الدخول. تحقق من بيانات الاعتماد.",
+      "otpInvalid": "رمز التحقق غير صحيح",
+      "otpExpired": "انتهت صلاحية رمز التحقق",
+      "otpRequired": "رمز التحقق مطلوب",
+      "phoneNotVerified": "رقم الهاتف غير محقق",
+      "accountLocked": "الحساب مقفل مؤقتاً",
+      "accountNotActivated": "الحساب غير مفعل",
+      "tokenExpired": "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى.",
+      "tokenInvalid": "جلسة غير صحيحة. يرجى تسجيل الدخول مرة أخرى.",
+      "refreshTokenExpired": "انتهت صلاحية الجلسة. مطلوب إعادة تسجيل الدخول.",
+      "sessionTimeout": "انتهت صلاحية الجلسة لأسباب أمنية",
+      "logoutFailed": "فشل تسجيل الخروج",
+      "passwordResetFailed": "فشل إعادة تعيين كلمة المرور",
+      "emailAlreadyExists": "عنوان البريد الإلكتروني مستخدم بالفعل",
+      "phoneAlreadyExists": "رقم الهاتف مستخدم بالفعل"
     },
     "location": {
       "denied": "تم رفض الوصول للموقع",
       "unavailable": "الموقع غير متوفر",
-      "timeout": "انتهت مهلة تحديد الموقع"
+      "timeout": "انتهت مهلة تحديد الموقع",
+      "notSupported": "تحديد الموقع الجغرافي غير مدعوم في هذا المتصفح",
+      "positionUnavailable": "الموقع غير متاح",
+      "permissionDenied": "تم رفض إذن تحديد الموقع",
+      "enableLocation": "يرجى تفعيل تحديد الموقع في الإعدادات",
+      "addressNotFound": "العنوان غير موجود",
+      "geocodingFailed": "فشل تحديد الموقع الجغرافي",
+      "coordinatesRequired": "الإحداثيات مطلوبة",
+      "invalidAddress": "عنوان غير صحيح"
+    },
+    "profile": {
+      "incomplete": "الملف الشخصي غير مكتمل",
+      "incompleteMessage": "يرجى إكمال ملفك الشخصي للمتابعة",
+      "missingBloodType": "فصيلة الدم مطلوبة",
+      "missingLocation": "الموقع مطلوب",
+      "missingName": "الاسم مطلوب",
+      "missingPhone": "رقم الهاتف مطلوب",
+      "updateFailed": "فشل تحديث الملف الشخصي",
+      "completionRequired": "إكمال الملف الشخصي مطلوب لهذا الإجراء",
+      "eligibilityCheckFailed": "فشل فحص الأهلية"
+    },
+    "bloodRequest": {
+      "createFailed": "فشل إنشاء الطلب",
+      "updateFailed": "فشل تحديث الطلب",
+      "deleteFailed": "فشل حذف الطلب",
+      "respondFailed": "فشل الرد على الطلب",
+      "alreadyResponded": "لقد رددت بالفعل على هذا الطلب",
+      "notFound": "الطلب غير موجود",
+      "expired": "انتهت صلاحية هذا الطلب",
+      "cancelled": "تم إلغاء هذا الطلب",
+      "fullfilled": "تم تلبية هذا الطلب بالفعل",
+      "unauthorizedAccess": "وصول غير مصرح به لهذا الطلب",
+      "loadFailed": "فشل تحميل الطلبات"
+    },
+    "donation": {
+      "confirmFailed": "فشل تأكيد التبرع",
+      "rateFailed": "فشل تقييم التبرع",
+      "historyLoadFailed": "فشل تحميل التاريخ",
+      "eligibilityFailed": "فشل فحص الأهلية",
+      "notEligible": "أنت غير مؤهل للتبرع بالدم حالياً",
+      "tooSoonToDonate": "لا يزال من المبكر جداً التبرع بالدم مرة أخرى"
     },
     "notification": {
       "denied": "تم رفض الإشعارات",
-      "unsupported": "الإشعارات غير مدعومة"
+      "unsupported": "الإشعارات غير مدعومة",
+      "loadFailed": "فشل تحميل الإشعارات",
+      "markReadFailed": "فشل التحديد كمقروء",
+      "permissionRequired": "إذن الإشعارات مطلوب",
+      "enableNotifications": "يرجى تفعيل الإشعارات"
+    },
+    "upload": {
+      "tooLarge": "الملف كبير جداً",
+      "invalidFormat": "تنسيق الملف غير صحيح",
+      "uploadFailed": "فشل الرفع",
+      "maxSizeExceeded": "تم تجاوز الحد الأقصى للحجم ({maxSize})",
+      "typeNotAllowed": "نوع الملف غير مسموح",
+      "processingFailed": "فشل معالجة الملف"
+    },
+    "form": {
+      "validationFailed": "خطأ في التحقق من النموذج",
+      "requiredFields": "يرجى ملء جميع الحقول المطلوبة",
+      "invalidData": "بيانات غير صحيحة",
+      "submitFailed": "فشل إرسال النموذج",
+      "fieldTooLong": "هذا الحقل طويل جداً",
+      "fieldTooShort": "هذا الحقل قصير جداً",
+      "invalidFormat": "تنسيق غير صحيح",
+      "duplicateEntry": "إدخال مكرر"
+    }
+  },
+  "profile": {
+    "incomplete": {
+      "title": "الملف الشخصي غير مكتمل",
+      "subtitle": "أكمل ملفك الشخصي للحصول على تجربة أفضل",
+      "progress": "التقدم",
+      "missingFields": "الحقول المفقودة",
+      "nextSteps": "الخطوات التالية",
+      "later": "لاحقاً",
+      "completeNow": "إكمال الآن",
+      "continueAnyway": "المتابعة على أي حال",
+      "completeForBetterExperience": "أكمل ملفك الشخصي للوصول إلى جميع الميزات"
     }
   }
 }

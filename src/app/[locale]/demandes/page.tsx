@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import Navbar from '@/components/Navbar';
 import BloodRequestCard from '@/components/blood-requests/BloodRequestCard';
@@ -20,7 +20,10 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import apiService from '@/lib/api';
+import { ProfileIncompleteError } from '@/types/api';
 import { BloodRequest, BloodType, UrgencyLevel, RequestStatus } from '@/types';
+import { useAuth } from '@/contexts/AuthContext';
+import ProfileCompletionModal from '@/components/ProfileCompletionModal';
 
 interface FilterState {
   search: string;
@@ -33,6 +36,7 @@ interface FilterState {
 
 export default function BloodRequestsPage() {
   const params = useParams();
+  const router = useRouter();
   const locale = params.locale as string;
   const [filteredRequests, setFilteredRequests] = useState<BloodRequest[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -46,7 +50,24 @@ export default function BloodRequestsPage() {
     sortBy: 'newest'
   });
 
+  // Profile completion modal state
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileModalData, setProfileModalData] = useState<{
+    missingFields: Record<string, string>;
+    completionPercentage: number;
+    nextSteps?: string;
+  }>({
+    missingFields: {},
+    completionPercentage: 0
+  });
+
   const t = useTranslations();
+  const { checkProfileCompletion } = useAuth();
+
+  // Check profile completion when page loads
+  useEffect(() => {
+    checkProfileCompletion();
+  }, [checkProfileCompletion]);
 
   // Build API params
   const apiParams = {
@@ -89,8 +110,8 @@ export default function BloodRequestsPage() {
         case 'closest':
           return (a.distance || 999) - (b.distance || 999);
         case 'urgent':
-          const urgencyOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
-          return urgencyOrder[b.urgencyLevel] - urgencyOrder[a.urgencyLevel];
+          const urgencyOrder = { CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
+          return urgencyOrder[b.urgency] - urgencyOrder[a.urgency];
         case 'newest':
         default:
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -106,8 +127,7 @@ export default function BloodRequestsPage() {
       const searchLower = searchTerm.toLowerCase();
       filtered = filtered.filter(request =>
         request.description?.toLowerCase().includes(searchLower) ||
-        request.medicalInfo?.hospitalName?.toLowerCase().includes(searchLower) ||
-        request.location.address?.toLowerCase().includes(searchLower) ||
+        request.requester?.name?.toLowerCase().includes(searchLower) ||
         request.bloodType.toLowerCase().includes(searchLower)
       );
     }
@@ -148,7 +168,17 @@ export default function BloodRequestsPage() {
         refreshRequests();
       }
     } catch (error) {
-      console.error('Failed to respond to request:', error);
+      if (error instanceof ProfileIncompleteError) {
+        // Show profile completion modal
+        setProfileModalData({
+          missingFields: error.data.data?.requiredFields || error.data.missingFields || {},
+          completionPercentage: error.data.data?.completionPercentage || error.data.completionPercentage || 0,
+          nextSteps: error.data.data?.nextSteps || error.data.nextSteps
+        });
+        setShowProfileModal(true);
+      } else {
+        console.error('Failed to respond to request:', error);
+      }
     }
   };
 
@@ -274,6 +304,16 @@ export default function BloodRequestsPage() {
           </ApiErrorBoundary>
         </main>
       </div>
+
+      {/* Profile Completion Modal */}
+      <ProfileCompletionModal
+        isOpen={showProfileModal}
+        onClose={() => setShowProfileModal(false)}
+        missingFields={profileModalData.missingFields}
+        completionPercentage={profileModalData.completionPercentage}
+        locale={locale}
+        nextSteps={profileModalData.nextSteps}
+      />
     </ProtectedRoute>
   );
 }

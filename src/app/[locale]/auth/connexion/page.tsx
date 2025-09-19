@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Droplets, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import apiService from '@/lib/api';
+import { ErrorAlert } from '@/components/errors';
 
 export default function LoginPage() {
   const params = useParams();
@@ -18,7 +20,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState<any>(null);
 
   const router = useRouter();
   const { login } = useAuth();
@@ -31,9 +33,22 @@ export default function LoginPage() {
 
     try {
       await login(phone, password);
-      router.push(`/${locale}/dashboard`);
+
+      // Vérifier le statut de completion du profil
+      try {
+        const profileStatus = await apiService.getProfileCompletionStatus();
+        if (profileStatus.success && !profileStatus.data.isProfileComplete) {
+          router.push(`/${locale}/auth/completer-profil`);
+        } else {
+          router.push(`/${locale}/dashboard`);
+        }
+      } catch (profileError) {
+        // En cas d'erreur de vérification du profil, rediriger vers le dashboard
+        console.warn('Profile completion check failed:', profileError);
+        router.push(`/${locale}/dashboard`);
+      }
     } catch (err: any) {
-      setError(err.message || t('errors.networkError'));
+      setError(err);
     } finally {
       setIsLoading(false);
     }
@@ -96,9 +111,12 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="text-red-600 text-sm text-center bg-red-50 p-2 rounded">
-                {error}
-              </div>
+              <ErrorAlert
+                error={error}
+                onRetry={() => setError(null)}
+                onDismiss={() => setError(null)}
+                className="mb-4"
+              />
             )}
 
             <Button

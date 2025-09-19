@@ -1,12 +1,6 @@
 import { lazy } from 'react';
 
 // Lazy load components with proper error boundaries
-export const LazyBloodRequestDetails = lazy(() =>
-  import('@/app/[locale]/demandes/[id]/page').then(module => ({
-    default: module.default
-  }))
-);
-
 export const LazyProfilePage = lazy(() =>
   import('@/app/[locale]/profil/page').then(module => ({
     default: module.default

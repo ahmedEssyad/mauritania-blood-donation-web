@@ -72,17 +72,16 @@ export default function VerificationPage() {
       const response = await apiService.verifyOTP(phone, otpCode);
 
       if (response.success) {
-        if (type === 'register') {
-          // Complete registration
-          const registrationData = localStorage.getItem('registrationData');
-          if (registrationData) {
-            const data = JSON.parse(registrationData);
-            await apiService.setPassword(phone, data.password);
-            localStorage.removeItem('registrationData');
-          }
-        }
+        // Marquer OTP comme vérifié
+        localStorage.setItem('otpVerified', 'true');
 
-        router.push(`/${locale}/auth/connexion`);
+        if (type === 'register') {
+          // Rediriger vers la page de définition de mot de passe
+          router.push(`/${locale}/auth/definir-mot-de-passe?phone=${encodeURIComponent(phone)}`);
+        } else {
+          // Pour reset password
+          router.push(`/${locale}/auth/reinitialiser-mot-de-passe?phone=${encodeURIComponent(phone)}`);
+        }
       } else {
         setError(response.message || t('errors.validationError'));
       }

@@ -1,9 +1,9 @@
 // Types correspondant exactement aux modèles backend
 export type BloodType = 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
 
-export type UrgencyLevel = 'low' | 'medium' | 'high' | 'urgent';
+export type UrgencyLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
-export type RequestStatus = 'active' | 'fulfilled' | 'cancelled' | 'expired';
+export type RequestStatus = 'ACTIVE' | 'FULFILLED' | 'CANCELLED' | 'EXPIRED';
 
 export type DonationStatus = 'pending' | 'confirmed' | 'disputed' | 'cancelled';
 

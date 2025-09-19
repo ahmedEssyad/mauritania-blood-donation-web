@@ -4,6 +4,7 @@ import { useState } from 'react';
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useAuth } from '@/contexts/AuthContext';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -26,7 +27,9 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import apiService from '@/lib/api';
+import { ProfileIncompleteError } from '@/types/api';
 import { BloodType, UrgencyLevel } from '@/types';
+import ProfileCompletionModal from '@/components/ProfileCompletionModal';
 
 // Create schema factory function to use translations
 const createRequestSchemaFactory = (t: any) => z.object({
@@ -47,9 +50,21 @@ export default function CreateRequestPage({ params }: { params: Promise<{ locale
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [profileModalData, setProfileModalData] = useState<{
+    missingFields: Record<string, string>;
+    completionPercentage: number;
+    nextSteps: string;
+  } | null>(null);
 
   const router = useRouter();
   const t = useTranslations();
+  const { checkProfileCompletion } = useAuth();
+
+  // Check profile completion when page loads
+  React.useEffect(() => {
+    checkProfileCompletion();
+  }, [checkProfileCompletion]);
 
   const form = useForm<CreateRequestFormData>({
     resolver: zodResolver(createRequestSchemaFactory(t)),
@@ -122,7 +137,17 @@ export default function CreateRequestPage({ params }: { params: Promise<{ locale
         setError(response.message || t('bloodRequests.create.createError'));
       }
     } catch (err: any) {
-      setError(err.message || t('bloodRequests.create.networkError'));
+      if (err instanceof ProfileIncompleteError) {
+        // Handle profile incomplete error
+        setProfileModalData({
+          missingFields: err.data.data?.requiredFields || {},
+          completionPercentage: 50, // Default percentage for incomplete profile
+          nextSteps: t('profile.incomplete.completeForBetterExperience')
+        });
+        setShowProfileModal(true);
+      } else {
+        setError(err.message || t('bloodRequests.create.networkError'));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -436,6 +461,17 @@ export default function CreateRequestPage({ params }: { params: Promise<{ locale
             </div>
           </div>
         </main>
+
+        {/* Profile Completion Modal */}
+        {profileModalData && (
+          <ProfileCompletionModal
+            isOpen={showProfileModal}
+            onClose={() => setShowProfileModal(false)}
+            missingFields={profileModalData.missingFields}
+            completionPercentage={profileModalData.completionPercentage}
+            nextSteps={profileModalData.nextSteps}
+          />
+        )}
       </div>
     </ProtectedRoute>
   );

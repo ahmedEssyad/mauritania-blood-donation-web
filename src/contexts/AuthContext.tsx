@@ -4,6 +4,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '@/types';
 import apiService from '@/lib/api';
 
+interface ProfileCompletionStatus {
+  profileCompleted: boolean;
+  isProfileComplete: boolean;
+  missingFields: Record<string, string>;
+  completionPercentage: number;
+  nextSteps: string;
+}
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -11,6 +19,8 @@ interface AuthContextType {
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   isAuthenticated: boolean;
+  profileStatus: ProfileCompletionStatus | null;
+  checkProfileCompletion: () => Promise<ProfileCompletionStatus | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -19,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profileStatus, setProfileStatus] = useState<ProfileCompletionStatus | null>(null);
 
 
   useEffect(() => {
@@ -71,6 +82,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(userData);
           setIsAuthenticated(true);
           localStorage.setItem('user', JSON.stringify(userData));
+
+          // Check profile completion after user is set
+          // Use immediate check instead of setTimeout for better timing
+          checkProfileCompletion();
         } else if (response.code === 'RATE_LIMITED') {
           // Handle rate limiting - keep existing auth state with cached data
           console.warn('Profile API rate limited - keeping cached user data');
@@ -146,12 +161,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const checkProfileCompletion = React.useCallback(async (): Promise<ProfileCompletionStatus | null> => {
+    try {
+      if (!isAuthenticated) {
+        return null;
+      }
+
+      const response = await apiService.getProfileCompletionStatus();
+
+      if (response.success && response.data) {
+        const status = response.data;
+        setProfileStatus(status);
+
+        // Auto-redirect to profile completion for critical paths
+        if (!status.isProfileComplete && typeof window !== 'undefined') {
+          const currentPath = window.location.pathname;
+          const locale = currentPath.split('/')[1] || 'fr'; // Extract locale from URL
+
+          // Don't redirect if already on profile completion page
+          if (!currentPath.includes('/auth/completer-profil')) {
+            // Critical paths that require complete profile
+            const criticalPaths = [
+              `/${locale}/demandes/creer`,
+              `/${locale}/demandes`,
+              `/${locale}/notifications`
+            ];
+
+            // Also check for respond actions on blood requests list
+            const isRespondAction = currentPath.includes('/demandes') && !currentPath.includes('/demandes/creer');
+
+            if (criticalPaths.some(path => currentPath === path || currentPath.startsWith(path + '/')) || isRespondAction) {
+              console.log('Redirecting to profile completion due to incomplete profile');
+              window.location.href = `/${locale}/auth/completer-profil`;
+              return status;
+            }
+          }
+        }
+
+        return status;
+      }
+    } catch (error: any) {
+      console.error('Failed to check profile completion:', error);
+    }
+
+    return null;
+  }, [isAuthenticated]);
+
   const refreshUser = React.useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken');
       if (!token) {
         setUser(null);
         setIsAuthenticated(false);
+        setProfileStatus(null);
         return;
       }
 
@@ -163,6 +225,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(userData);
         setIsAuthenticated(true);
         localStorage.setItem('user', JSON.stringify(userData));
+
+        // Check profile completion after user data is updated
+        checkProfileCompletion();
       } else if (response.code === 'RATE_LIMITED') {
         // Handle rate limiting - keep existing auth state
         console.warn('Refresh user API rate limited - keeping current state');
@@ -175,12 +240,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem('user');
         setUser(null);
         setIsAuthenticated(false);
+        setProfileStatus(null);
       }
     } catch (error: any) {
       console.error('Failed to refresh user:', error);
       // Don't clear auth state on network errors, but log the issue
     }
-  }, []);
+  }, [checkProfileCompletion]);
 
   return (
     <AuthContext.Provider
@@ -191,6 +257,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         refreshUser,
         isAuthenticated,
+        profileStatus,
+        checkProfileCompletion,
       }}
     >
       {children}

@@ -28,7 +28,7 @@ export default function DashboardPage() {
   const [recentRequests, setRecentRequests] = useState<BloodRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { user } = useAuth();
+  const { user, checkProfileCompletion } = useAuth();
   const t = useTranslations();
   const pathname = usePathname();
   const locale = pathname.split('/')[1] || 'fr'; // Extract locale from pathname
@@ -36,7 +36,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadDashboardData();
-  }, []);
+    // Vérifier la completion du profil au chargement du dashboard
+    checkProfileCompletion();
+  }, [checkProfileCompletion]);
 
   const loadDashboardData = async () => {
     try {
@@ -262,7 +264,7 @@ export default function DashboardPage() {
                         </div>
                         <div>
                           <p className="text-sm font-medium text-gray-900">
-                            {request.bloodType} • {request.medicalInfo?.hospitalName || t('dashboard.recentRequests.hospital')}
+                            {request.bloodType} • {request.requester?.name || t('dashboard.recentRequests.hospital')}
                           </p>
                           <p className="text-sm text-gray-500">
                             {request.description || t('dashboard.recentRequests.urgentRequest')}
@@ -270,14 +272,14 @@ export default function DashboardPage() {
                           <div className="flex items-center space-x-2 mt-1">
                             <MapPin className="h-3 w-3 text-gray-400" />
                             <span className="text-xs text-gray-500">
-                              {request.location.address || t('dashboard.recentRequests.location')}
+                              {request.distance ? `${request.distance}km` : t('dashboard.recentRequests.location')}
                             </span>
                           </div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getUrgencyColor(request.urgencyLevel)}`}>
-                          {t(`bloodRequests.urgency.${request.urgencyLevel}`)}
+                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getUrgencyColor(request.urgency)}`}>
+                          {t(`bloodRequests.urgency.${request.urgency}`)}
                         </span>
                         <p className="text-xs text-gray-500 mt-1">
                           {new Date(request.createdAt).toLocaleDateString(locale === 'ar' ? 'ar' : 'fr-FR')}
